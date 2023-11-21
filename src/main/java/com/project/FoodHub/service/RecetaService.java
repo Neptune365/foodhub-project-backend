@@ -1,5 +1,6 @@
 package com.project.FoodHub.service;
 
+import com.project.FoodHub.entity.Colegiado;
 import com.project.FoodHub.entity.Receta;
 import com.project.FoodHub.excepcion.RecetaNotFoundException;
 import com.project.FoodHub.repository.RecetaRepository;

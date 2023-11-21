@@ -46,10 +46,4 @@ public class Receta {
     @Column(name = "categoria", nullable = false)
     private String categoria;
 
-    public Receta(String titulo, String imagen, String descripcion) {
-        this.titulo = titulo;
-        this.imagen = imagen;
-        this.descripcion = descripcion;
-    }
-
 }
