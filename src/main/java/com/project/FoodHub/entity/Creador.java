@@ -14,7 +14,8 @@ public class Creador {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idUsuario;
+    @Column(name = "creador_id")
+    private Long id;
 
     @Column(name = "nombre", nullable = false)
     private String nombre;
