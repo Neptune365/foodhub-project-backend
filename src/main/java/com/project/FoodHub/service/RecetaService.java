@@ -1,12 +1,13 @@
 package com.project.FoodHub.service;
 
-import com.project.FoodHub.entity.Colegiado;
-import com.project.FoodHub.entity.Receta;
-import com.project.FoodHub.excepcion.RecetaNotFoundException;
+import com.project.FoodHub.dto.RecetaDTO;
+import com.project.FoodHub.entity.*;
+import com.project.FoodHub.repository.CreadorRepository;
 import com.project.FoodHub.repository.RecetaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -14,27 +15,51 @@ import java.util.List;
 public class RecetaService {
 
     private final RecetaRepository recetaRepository;
+    private final CreadorRepository creadorRepository;
 
-    public void crearReceta(Receta receta) {
+
+    public void crearReceta(Long creadorId, Receta receta, Categoria categoria) {
+        Creador creador = creadorRepository.findById(creadorId)
+                .orElseThrow(() -> new RuntimeException("Creador no encontrado con ID: " + creadorId));
+
+        if (categoria != null) {
+            receta.setCategoria(categoria);
+        } else {
+            throw new IllegalArgumentException("La categoría no puede ser nula");
+        }
+
+        receta.setCreador(creador);
         recetaRepository.save(receta);
     }
 
-//  POR DESARROLLAR
-    public String mostrarRecetasPorCategoria(String categoria, String titulo, String imagen, String descripcion) {
-        return "";
+    public void añadirIngrediente(Ingrediente ingrediente) {
+
+    }
+
+    public void añadirInstruccion(Instruccion instruccion) {
+
     }
 
 
-    //  POR DESARROLLAR
-    public Receta verDetalleDeReceta(Long id) {
-        Receta receta = recetaRepository.findById(id)
-                .orElse(null);
+    public List<RecetaDTO> mostrarRecetasPorCategoria(Categoria categoria) {
+        List<Receta> recetas = recetaRepository.findByCategoria(categoria);
+        List<RecetaDTO> recetasDTO = new ArrayList<>();
 
-        if (receta == null) {
-            throw new RecetaNotFoundException("LA RECETA MAMAWEBA NO EXISTE");
+        for (Receta receta : recetas) {
+            RecetaDTO recetaDTO = RecetaDTO.builder()
+                    .titulo(receta.getTitulo())
+                    .descripcion(receta.getDescripcion())
+                    .imagenReceta(receta.getImagenReceta())
+                    .build();
+            recetasDTO.add(recetaDTO);
         }
 
-        return receta;
+        return recetasDTO;
+    }
+
+    public Receta verReceta(Long id) {
+        return recetaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Receta no encontrada con ID: " + id));
     }
 
 }

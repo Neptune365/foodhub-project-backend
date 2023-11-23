@@ -1,9 +1,10 @@
 package com.project.FoodHub.controller;
 
+import com.project.FoodHub.dto.CreadorDTO;
 import com.project.FoodHub.entity.Creador;
-import com.project.FoodHub.entity.Receta;
 import com.project.FoodHub.service.CreadorService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,25 +16,27 @@ public class CreadorController {
 
     private final CreadorService creadorService;
 
-    @GetMapping("/")
-    public List<Creador> mostrarCreadores() {
-        return creadorService.mostrarCreador();
+    @GetMapping("/todos")
+    public List<Creador> mostrarCreador() {
+        return creadorService.mostrarCreadores();
     }
 
-    @PostMapping("/")
-    public Creador crearCreador(@RequestBody Creador creador) {
+    @PostMapping("/registro")
+    public ResponseEntity<String> crearCuenta(@RequestBody Creador creador) {
         creadorService.crearCuenta(creador);
-        return creador;
+        return ResponseEntity.ok("Creador creado exitosamente");
     }
 
-    @PostMapping("/verReceta/{creadorId}")
-    public Receta verReceta(@PathVariable Long creadorId) {
-        return creadorService.verReceta(creadorId);
+    @PostMapping("/logeo")
+    public ResponseEntity<String> iniciarSesion(@RequestBody CreadorDTO creadorDTO) {
+        creadorService.iniciarSesion(creadorDTO);
+        return ResponseEntity.ok("Ha iniciado sesión");
     }
 
-    @PutMapping("/modificar/{creadorId}")
-    public Creador modificarPerfil(@PathVariable Long creadorId, @RequestBody Creador creador) {
-        return creadorService.modificarPerfil(creadorId, creador);
-    }
+    @GetMapping("/{creadorId}/cantidadRecetas")
+    public ResponseEntity<Integer> obtenerCantidadRecetasCreadas(@PathVariable Long creadorId) {
+        Integer cantidadRecetas = creadorService.obtenerCantidadDeRecetasCreadas(creadorId);
 
+        return ResponseEntity.ok(cantidadRecetas);
+    }
 }
