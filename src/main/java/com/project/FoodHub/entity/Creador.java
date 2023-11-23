@@ -31,8 +31,8 @@ public class Creador {
     @Column(name = "correo_electronico", nullable = false)
     private String correoElectronico;
 
-    @Column(name = "contraseña", nullable = false)
-    private String contraseña;
+    @Column(name = "contrasena", nullable = false)
+    private String contrasena;
 
     @Column(name = "codigo_colegiatura", nullable = false)
     private String codigoColegiatura;

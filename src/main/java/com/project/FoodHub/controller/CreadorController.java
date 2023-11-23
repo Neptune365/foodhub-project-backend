@@ -1,5 +1,6 @@
 package com.project.FoodHub.controller;
 
+import com.project.FoodHub.dto.CreadorDTO;
 import com.project.FoodHub.entity.Creador;
 import com.project.FoodHub.service.CreadorService;
 import lombok.RequiredArgsConstructor;
@@ -17,12 +18,25 @@ public class CreadorController {
 
     @GetMapping("/todos")
     public List<Creador> mostrarCreador() {
-        return creadorService.mostrarCreador();
+        return creadorService.mostrarCreadores();
     }
 
-    @PostMapping("/crear")
+    @PostMapping("/registro")
     public ResponseEntity<String> crearCuenta(@RequestBody Creador creador) {
         creadorService.crearCuenta(creador);
         return ResponseEntity.ok("Creador creado exitosamente");
+    }
+
+    @PostMapping("/logeo")
+    public ResponseEntity<String> iniciarSesion(@RequestBody CreadorDTO creadorDTO) {
+        creadorService.iniciarSesion(creadorDTO);
+        return ResponseEntity.ok("Ha iniciado sesión");
+    }
+
+    @GetMapping("/{creadorId}/cantidadRecetas")
+    public ResponseEntity<Integer> obtenerCantidadRecetasCreadas(@PathVariable Long creadorId) {
+        Integer cantidadRecetas = creadorService.obtenerCantidadDeRecetasCreadas(creadorId);
+
+        return ResponseEntity.ok(cantidadRecetas);
     }
 }

@@ -1,9 +1,7 @@
 package com.project.FoodHub.service;
 
 import com.project.FoodHub.dto.RecetaDTO;
-import com.project.FoodHub.entity.Categoria;
-import com.project.FoodHub.entity.Creador;
-import com.project.FoodHub.entity.Receta;
+import com.project.FoodHub.entity.*;
 import com.project.FoodHub.repository.CreadorRepository;
 import com.project.FoodHub.repository.RecetaRepository;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +31,15 @@ public class RecetaService {
         receta.setCreador(creador);
         recetaRepository.save(receta);
     }
+
+    public void añadirIngrediente(Ingrediente ingrediente) {
+
+    }
+
+    public void añadirInstruccion(Instruccion instruccion) {
+
+    }
+
 
     public List<RecetaDTO> mostrarRecetasPorCategoria(Categoria categoria) {
         List<Receta> recetas = recetaRepository.findByCategoria(categoria);
