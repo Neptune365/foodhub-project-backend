@@ -26,7 +26,7 @@ public class Creador {
     private String apellidoPaterno;
 
     @Column(name = "apellido_materno", nullable = false)
-    private String appellidoMaterno;
+    private String apellidoMaterno;
 
     @Column(name = "correo_electronico", nullable = false)
     private String correoElectronico;
@@ -37,10 +37,10 @@ public class Creador {
     @Column(name = "codigo_colegiatura", nullable = false)
     private String codigoColegiatura;
 
-//    @Column(name = "foto", nullable = true)
-//    private String foto;
+    @Column(name = "foto_perfil", nullable = true)
+    private String fotoPerfil;
 
-//    @OneToMany(mappedBy = "creador")
-//    private List<Receta> recetas;
+    @OneToMany(mappedBy = "creador")
+    private List<Receta> recetas;
 
 }

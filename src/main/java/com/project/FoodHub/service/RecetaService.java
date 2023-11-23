@@ -19,6 +19,7 @@ public class RecetaService {
     private final RecetaRepository recetaRepository;
     private final CreadorRepository creadorRepository;
 
+
     public void crearReceta(Long creadorId, Receta receta, Categoria categoria) {
         Creador creador = creadorRepository.findById(creadorId)
                 .orElseThrow(() -> new RuntimeException("Creador no encontrado con ID: " + creadorId));
@@ -41,7 +42,7 @@ public class RecetaService {
             RecetaDTO recetaDTO = RecetaDTO.builder()
                     .titulo(receta.getTitulo())
                     .descripcion(receta.getDescripcion())
-                    .imagen(receta.getImagen())
+                    .imagenReceta(receta.getImagenReceta())
                     .build();
             recetasDTO.add(recetaDTO);
         }

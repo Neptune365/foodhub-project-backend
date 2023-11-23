@@ -20,13 +20,4 @@ public class CreadorService {
     public void crearCuenta(Creador creador) {
         creadorRepository.save(creador);
     }
-
-//    public Creador modificarFotoDePerfil(Long creadorId, String foto) {
-//        Creador creadorExistente = creadorRepository.findById(creadorId)
-//                .orElseThrow(() -> new RuntimeException("Creador no encontrado con ID: " + creadorId));
-//
-//        creadorExistente.setFoto(foto);
-//
-//        return creadorRepository.save(creadorExistente);
-//    }
 }

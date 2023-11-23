@@ -18,13 +18,15 @@ public class RecetaController {
     private final RecetaService recetaService;
 
     @PostMapping("/crear")
-    public ResponseEntity<String> crearReceta(@RequestParam Long creadorId, @RequestBody Receta receta, @RequestParam Categoria categoria) {
+    public ResponseEntity<String> crearReceta(@RequestParam Long creadorId,
+                                              @RequestBody Receta receta,
+                                              @RequestParam Categoria categoria) {
         recetaService.crearReceta(creadorId, receta, categoria);
         return ResponseEntity.ok("Receta creada correctamente");
     }
 
-    @GetMapping("/categoria/{categoria}")
-    public ResponseEntity<List<RecetaDTO>> mostrarRecetasPorCategoria(@PathVariable Categoria categoria) {
+    @GetMapping("/categoria")
+    public ResponseEntity<List<RecetaDTO>> mostrarRecetasPorCategoria(@RequestParam Categoria categoria) {
         List<RecetaDTO> recetasDTO = recetaService.mostrarRecetasPorCategoria(categoria);
         return ResponseEntity.ok(recetasDTO);
     }

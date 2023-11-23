@@ -12,5 +12,5 @@ import lombok.NoArgsConstructor;
 public class RecetaDTO {
     private String titulo;
     private String descripcion;
-    private String imagen;
+    private String imagenReceta;
 }

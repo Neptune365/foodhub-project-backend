@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/creador")
+@RequestMapping("/creador")
 @RequiredArgsConstructor
 public class CreadorController {
 
@@ -25,11 +25,4 @@ public class CreadorController {
         creadorService.crearCuenta(creador);
         return ResponseEntity.ok("Creador creado exitosamente");
     }
-
-//    @PutMapping("/{creadorId}/modificar-foto")
-//    public ResponseEntity<Creador> modificarFotoDePerfil(@PathVariable Long creadorId, @RequestParam String foto) {
-//        Creador creadorModificado = creadorService.modificarFotoDePerfil(creadorId, foto);
-//        return ResponseEntity.ok(creadorModificado);
-//    }
-
 }
