@@ -1,20 +1,32 @@
 package com.project.FoodHub.service;
 
 import com.project.FoodHub.entity.Creador;
-import com.project.FoodHub.entity.Receta;
+import com.project.FoodHub.repository.CreadorRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public interface CreadorService {
+@RequiredArgsConstructor
+public class CreadorService {
 
-    List<Creador> mostrarCreador();
+    private final CreadorRepository creadorRepository;
 
-    Receta verReceta(Long creadorId);
+    public List<Creador> mostrarCreador() {
+        return creadorRepository.findAll();
+    }
 
-    void crearCuenta(Creador creador);
+    public void crearCuenta(Creador creador) {
+        creadorRepository.save(creador);
+    }
 
-    Creador modificarPerfil(Long creadorId, Creador creador);
-
+//    public Creador modificarFotoDePerfil(Long creadorId, String foto) {
+//        Creador creadorExistente = creadorRepository.findById(creadorId)
+//                .orElseThrow(() -> new RuntimeException("Creador no encontrado con ID: " + creadorId));
+//
+//        creadorExistente.setFoto(foto);
+//
+//        return creadorRepository.save(creadorExistente);
+//    }
 }

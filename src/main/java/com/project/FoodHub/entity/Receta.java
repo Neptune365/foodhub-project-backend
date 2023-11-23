@@ -17,6 +17,7 @@ public class Receta {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "receta_id")
     private Long id;
 
     @Column(name = "titulo", nullable = false)
@@ -43,7 +44,12 @@ public class Receta {
     @Column(name = "imagen", nullable = false)
     private String imagen;
 
+    @ManyToOne
+    @JoinColumn(name = "creador_id")
+    private Creador creador;
+
+    @Enumerated(EnumType.STRING)
     @Column(name = "categoria", nullable = false)
-    private String categoria;
+    private Categoria categoria;
 
 }

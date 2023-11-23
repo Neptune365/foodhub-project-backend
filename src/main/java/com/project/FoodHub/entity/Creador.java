@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -34,5 +36,11 @@ public class Creador {
 
     @Column(name = "codigo_colegiatura", nullable = false)
     private String codigoColegiatura;
+
+//    @Column(name = "foto", nullable = true)
+//    private String foto;
+
+//    @OneToMany(mappedBy = "creador")
+//    private List<Receta> recetas;
 
 }
