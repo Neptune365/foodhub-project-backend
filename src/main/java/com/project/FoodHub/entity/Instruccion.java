@@ -20,7 +20,7 @@ public class Instruccion {
     @Column(name = "instruccion", nullable = false)
     private String instruccion;
 
-//    @ManyToOne
-//    @JoinColumn(name = "receta_id")
-//    private Receta receta;
+    @ManyToOne
+    @JoinColumn(name = "receta_id")
+    private Receta receta;
 }

@@ -1,10 +1,14 @@
 package com.project.FoodHub.controller;
 
 import com.project.FoodHub.dto.RecetaDTO;
+import com.project.FoodHub.dto.RecetaDTORequest;
 import com.project.FoodHub.entity.Categoria;
+import com.project.FoodHub.entity.Ingrediente;
+import com.project.FoodHub.entity.Instruccion;
 import com.project.FoodHub.entity.Receta;
 import com.project.FoodHub.service.RecetaService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,11 +22,11 @@ public class RecetaController {
     private final RecetaService recetaService;
 
     @PostMapping("/crear")
-    public ResponseEntity<String> crearReceta(@RequestParam Long creadorId,
-                                              @RequestBody Receta receta,
-                                              @RequestParam Categoria categoria) {
-        recetaService.crearReceta(creadorId, receta, categoria);
-        return ResponseEntity.ok("Receta creada correctamente");
+    public ResponseEntity<String> crearReceta(
+            @RequestParam Long creadorId,
+            @RequestBody RecetaDTORequest recetaDTORequest) {
+        recetaService.crearReceta(creadorId, recetaDTORequest);
+        return new ResponseEntity<>("Receta creada exitosamente", HttpStatus.CREATED);
     }
 
     @GetMapping("/categoria")
@@ -31,9 +35,9 @@ public class RecetaController {
         return ResponseEntity.ok(recetasDTO);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Receta> verReceta(@PathVariable Long id) {
-        Receta receta = recetaService.verReceta(id);
+    @GetMapping("/{creadoId}")
+    public ResponseEntity<Receta> verReceta(@PathVariable Long creadorId) {
+        Receta receta = recetaService.verReceta(creadorId);
         return ResponseEntity.ok(receta);
     }
 

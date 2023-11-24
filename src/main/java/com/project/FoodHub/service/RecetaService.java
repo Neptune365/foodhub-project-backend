@@ -1,6 +1,7 @@
 package com.project.FoodHub.service;
 
 import com.project.FoodHub.dto.RecetaDTO;
+import com.project.FoodHub.dto.RecetaDTORequest;
 import com.project.FoodHub.entity.*;
 import com.project.FoodHub.repository.CreadorRepository;
 import com.project.FoodHub.repository.RecetaRepository;
@@ -18,9 +19,14 @@ public class RecetaService {
     private final CreadorRepository creadorRepository;
 
 
-    public void crearReceta(Long creadorId, Receta receta, Categoria categoria) {
+    public void crearReceta(Long creadorId, RecetaDTORequest recetaDTORequest) {
         Creador creador = creadorRepository.findById(creadorId)
                 .orElseThrow(() -> new RuntimeException("Creador no encontrado con ID: " + creadorId));
+
+        Receta receta = recetaDTORequest.getReceta();
+        Categoria categoria = recetaDTORequest.getCategoria();
+        List<Ingrediente> ingredientes = recetaDTORequest.getIngredientes();
+        List<Instruccion> instrucciones = recetaDTORequest.getInstrucciones();
 
         if (categoria != null) {
             receta.setCategoria(categoria);
@@ -29,15 +35,16 @@ public class RecetaService {
         }
 
         receta.setCreador(creador);
+
+        for (Ingrediente ingrediente : ingredientes) {
+            receta.añadirIngrediente(ingrediente);
+        }
+
+        for (Instruccion instruccion : instrucciones) {
+            receta.añadirInstruccion(instruccion);
+        }
+
         recetaRepository.save(receta);
-    }
-
-    public void añadirIngrediente(Ingrediente ingrediente) {
-
-    }
-
-    public void añadirInstruccion(Instruccion instruccion) {
-
     }
 
 
@@ -57,9 +64,9 @@ public class RecetaService {
         return recetasDTO;
     }
 
-    public Receta verReceta(Long id) {
-        return recetaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Receta no encontrada con ID: " + id));
+    public Receta verReceta(Long creadorId) {
+        return recetaRepository.findById(creadorId)
+                .orElseThrow(() -> new RuntimeException("Receta no encontrada con ID: " + creadorId));
     }
 
 }

@@ -20,7 +20,7 @@ public class Ingrediente {
     @Column(name = "ingrediente", nullable = false)
     private String ingrediente;
 
-//    @ManyToOne
-//    @JoinColumn(name = "receta_id")
-//    private Receta receta;
+    @ManyToOne
+    @JoinColumn(name = "receta_id")
+    private Receta receta;
 }

@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -43,14 +44,28 @@ public class Receta {
     @JsonIgnore
     private Creador creador;
 
-//    @OneToMany(mappedBy = "receta")
-//    private List<Ingrediente> ingredientes;
-//
-//    @OneToMany(mappedBy = "receta")
-//    private List<Instruccion> instrucciones;
+    @OneToMany(mappedBy = "receta", cascade = CascadeType.ALL)
+    private List<Ingrediente> ingredientes;
+
+    @OneToMany(mappedBy = "receta", cascade = CascadeType.ALL)
+    private List<Instruccion> instrucciones;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "categoria", nullable = false)
     private Categoria categoria;
+
+    public void añadirIngrediente(Ingrediente ingrediente) {
+        if (ingredientes == null) {
+            ingredientes = new ArrayList<>();
+        }
+        ingredientes.add(ingrediente);
+    }
+
+    public void añadirInstruccion(Instruccion instruccion) {
+        if (instrucciones == null) {
+            instrucciones = new ArrayList<>();
+        }
+        instrucciones.add(instruccion);
+    }
 
 }
