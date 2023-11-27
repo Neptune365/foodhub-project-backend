@@ -21,7 +21,7 @@ public class Creador implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_creador")
-    private Long creador_id;
+    private Long idCreador;
 
     @Column(name = "nombre", nullable = false)
     private String nombre;

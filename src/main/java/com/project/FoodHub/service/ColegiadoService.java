@@ -12,7 +12,6 @@ public class ColegiadoService {
 
     private final ColegiadoRepository colegiadoRepository;
 
-//    POR DESARROLLAR
     public boolean validarColegiado(String nombre, String apellidoPaterno, String apellidoMaterno, String codigoColegiado) {
         Colegiado colegiado = colegiadoRepository.findByNombreColegiadoAndApellidoPaternoColegiadoAndAndAppellidoMaternoColegiadoAndCodigoColegiado(
             nombre, apellidoPaterno, apellidoMaterno, codigoColegiado);

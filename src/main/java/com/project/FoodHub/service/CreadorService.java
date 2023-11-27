@@ -82,7 +82,7 @@ public class CreadorService {
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            String jwtToken = jwtService.generateToken(creador.getCreador_id().toString(), new HashMap<>(), creador);
+            String jwtToken = jwtService.generateToken(creador.getIdCreador().toString(), new HashMap<>(), creador);
 
             return AuthResponse.builder().token(jwtToken).build();
         } else {
@@ -94,8 +94,8 @@ public class CreadorService {
         }
     }
 
-    public Integer obtenerCantidadDeRecetasCreadas(Long creadorId){
-        Creador creador = creadorRepository.findById(creadorId).orElse(null);
+    public Integer obtenerCantidadDeRecetasCreadas(Long idCreador){
+        Creador creador = creadorRepository.findByIdCreador(idCreador).orElse(null);
 
         if (creador != null) {
             List<Receta> recetasDelCreador = creador.getRecetas();
