@@ -21,18 +21,21 @@ import java.util.Map;
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(TokenNoEncontradoException.class)
-    public ResponseEntity<String> handleTokenNoEncontradoException(TokenNoEncontradoException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    public ResponseEntity<ErrorMessage> handleTokenNoEncontradoException(TokenNoEncontradoException exception) {
+        ErrorMessage messageException = new ErrorMessage(LocalDateTime.now(), HttpStatus.NOT_FOUND.value(), exception.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(messageException);
     }
 
     @ExceptionHandler(CorreoConfirmadoException.class)
-    public ResponseEntity<String> handleCorreoConfirmadoException(CorreoConfirmadoException ex) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    public ResponseEntity<ErrorMessage> handleCorreoConfirmadoException(CorreoConfirmadoException exception) {
+        ErrorMessage messageException = new ErrorMessage(LocalDateTime.now(), HttpStatus.CONFLICT.value(), exception.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(messageException);
     }
 
     @ExceptionHandler(TokenExpiradoException.class)
-    public ResponseEntity<String> handleTokenExpiradoException(TokenExpiradoException ex) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
+    public ResponseEntity<ErrorMessage> handleTokenExpiradoException(TokenExpiradoException exception) {
+        ErrorMessage messageException = new ErrorMessage(LocalDateTime.now(), HttpStatus.UNAUTHORIZED.value(), exception.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(messageException);
     }
 
     @ExceptionHandler(CorreoExistenteException.class)

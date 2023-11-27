@@ -25,7 +25,7 @@ public class RegistroService {
     private final ColegiadoService colegiadoService;
     private final CreadorService creadorService;
     private final EmailSender emailSender;
-    private final TokenConfirmacionService confirmationTokenService;
+    private final TokenConfirmacionService tokenConfirmacionService;
 
 
     public String registrar(CreadorRequest request) {
@@ -33,11 +33,15 @@ public class RegistroService {
             throw new ColegiadoNoValidoException("No se pudo validar el colegiado. Verifica los datos proporcionados.");
         }
 
+        if (!colegiadoService.isCuentaConfirmada(request.getCodigoColegiatura())) {
+            throw new CorreoConfirmadoException("Código de colegiado ya registrado");
+        }
+
         Creador creador = new Creador(
                 request.getNombre(),
                 request.getApellidoPaterno(),
                 request.getApellidoMaterno(),
-                request.getEmail(),
+                request.getCorreoElectronico(),
                 request.getContrasenia(),
                 request.getCodigoColegiatura()
         );
@@ -48,34 +52,40 @@ public class RegistroService {
             throw new CuentaNoCreadaException("No se pudo crear la cuenta correctamente.");
         }
 
-        String link = "http://localhost:8081/api/auth/confirm?token=" + token;
-        emailSender.enviarConfirmacionCuenta(request.getEmail(), request.getNombre(), link);
+        String link = "http://localhost:8083/api/auth/confirm?token=" + token;
+        emailSender.enviarConfirmacionCuenta(request.getCorreoElectronico(), request.getNombre(), link);
 
         return "created";
     }
 
     @Transactional
-    public String confirmToken(String token) {
-        TokenConfirmacion confirmationToken = confirmationTokenService
+    public String confirmarToken(String token) {
+        TokenConfirmacion tokenConfirmacion = tokenConfirmacionService
                 .getToken(token)
                 .orElseThrow(() ->
                         new TokenNoEncontradoException("Token no encontrado"));
 
-        if (confirmationToken.getConfirmedAt() != null) {
+        if (tokenConfirmacion.getConfirmedAt() != null) {
             throw new CorreoConfirmadoException("Correo electrónico ya confirmado");
         }
 
-        LocalDateTime expiredAt = confirmationToken.getExpiresAt();
+        LocalDateTime expiredAt = tokenConfirmacion.getExpiresAt();
 
         if (expiredAt.isBefore(LocalDateTime.now())) {
             throw new TokenExpiradoException("Token expirado");
         }
 
-        confirmationTokenService.setConfirmedAt(token);
-        creadorService.enableUser(
-                confirmationToken.getCreador().getCorreoElectronico());
+        tokenConfirmacionService.setConfirmedAt(token);
 
-        return "confirmed";
+        if (colegiadoService.isCuentaConfirmada(tokenConfirmacion.getCreador().getCodigoColegiatura())) {
+            colegiadoService.confirmarCuenta(tokenConfirmacion.getCreador().getCodigoColegiatura());
+            creadorService.enableUser(tokenConfirmacion.getCreador().getCorreoElectronico());
+            return "confirmed";
+        } else {
+            // La cuenta ya ha sido confirmada previamente
+            throw new CorreoConfirmadoException("Código de colegiado ya registrado");
+        }
+
     }
 
 }

@@ -30,6 +30,8 @@ public class Colegiado {
     @Column(name = "codigo_colegiado", nullable = false, unique = true)
     private String codigoColegiado;
 
+    @Column(name = "cuenta_confirmada")
+    private boolean cuentaConfirmada;
 
 
 }
