@@ -47,6 +47,9 @@ public class Creador implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Rol role;
 
+    @Column(name = "enabled")
+    private Boolean enabled = false;
+
     public Creador(String nombre,
                    String apellidoPaterno,
                    String apellidoMaterno,
@@ -93,6 +96,6 @@ public class Creador implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return enabled;
     }
 }

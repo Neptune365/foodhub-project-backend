@@ -4,6 +4,7 @@ import com.project.FoodHub.dto.CreadorDTO;
 import com.project.FoodHub.entity.Creador;
 import com.project.FoodHub.entity.Receta;
 import com.project.FoodHub.entity.Rol;
+import com.project.FoodHub.exception.CorreoExistenteException;
 import com.project.FoodHub.registration.token.TokenConfirmacion;
 import com.project.FoodHub.registration.token.TokenConfirmacionService;
 import com.project.FoodHub.repository.CreadorRepository;
@@ -20,7 +21,6 @@ import java.util.UUID;
 public class CreadorService {
 
     private final CreadorRepository creadorRepository;
-
     private final PasswordEncoder passwordEncoder;
     private final TokenConfirmacionService tokenConfirmacionService;
 
@@ -30,7 +30,7 @@ public class CreadorService {
 
     public String crearCuenta(Creador creador) {
         if (creadorRepository.findCreadorByCorreoElectronico(creador.getCorreoElectronico()).isPresent()) {
-            throw new IllegalStateException("Correo ingresado ya existe");
+            throw new CorreoExistenteException("Correo ingresado ya existe");
         }
 
         creador.setContrasenia(passwordEncoder.encode(creador.getContrasenia()));
@@ -80,5 +80,9 @@ public class CreadorService {
         }
 
         return 0;
+    }
+
+    public int enableUser(String email) {
+        return creadorRepository.enableUser(email);
     }
 }

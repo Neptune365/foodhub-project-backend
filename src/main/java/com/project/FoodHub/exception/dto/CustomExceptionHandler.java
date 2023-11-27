@@ -1,5 +1,6 @@
-package com.project.FoodHub.exception;
+package com.project.FoodHub.exception.dto;
 
+import com.project.FoodHub.exception.*;
 import com.project.FoodHub.exception.dto.ErrorMessage;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -19,32 +20,26 @@ import java.util.Map;
 @RestControllerAdvice
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(NoSuchElementException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ResponseEntity<ErrorMessage> noSuchElementException(NoSuchElementException exception) {
-        ErrorMessage messageException = new ErrorMessage(LocalDateTime.now(), HttpStatus.NOT_FOUND.value(), exception.getMessage());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(messageException);
+    @ExceptionHandler(TokenNoEncontradoException.class)
+    public ResponseEntity<String> handleTokenNoEncontradoException(TokenNoEncontradoException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 
-    @ExceptionHandler(ResourceNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ResponseEntity<ErrorMessage> usernameNotFoundException(ResourceNotFoundException exception) {
-        ErrorMessage messageException = new ErrorMessage(LocalDateTime.now(), HttpStatus.NOT_FOUND.value(), exception.getMessage());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(messageException);
+    @ExceptionHandler(CorreoConfirmadoException.class)
+    public ResponseEntity<String> handleCorreoConfirmadoException(CorreoConfirmadoException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
 
-    @ExceptionHandler(EmailExistsException.class)
+    @ExceptionHandler(TokenExpiradoException.class)
+    public ResponseEntity<String> handleTokenExpiradoException(TokenExpiradoException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(CorreoExistenteException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ResponseEntity<ErrorMessage> emailExistsException(EmailExistsException exception) {
+    public ResponseEntity<ErrorMessage> handleCorreoExistenteException(CorreoExistenteException exception) {
         ErrorMessage messageException = new ErrorMessage(LocalDateTime.now(), HttpStatus.CONFLICT.value(), exception.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(messageException);
-    }
-
-    @ExceptionHandler(MissingRequiredFieldsException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<ErrorMessage> handleMissingRequiredFieldsException(MissingRequiredFieldsException exception) {
-        ErrorMessage messageException = new ErrorMessage(LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(), exception.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(messageException);
     }
 
     @ExceptionHandler(ColegiadoNoValidoException.class)

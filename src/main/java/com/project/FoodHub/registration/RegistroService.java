@@ -4,11 +4,19 @@ import com.project.FoodHub.dto.CreadorRequest;
 import com.project.FoodHub.email.EmailSender;
 import com.project.FoodHub.entity.Creador;
 import com.project.FoodHub.exception.ColegiadoNoValidoException;
+import com.project.FoodHub.exception.CorreoConfirmadoException;
 import com.project.FoodHub.exception.CuentaNoCreadaException;
+import com.project.FoodHub.exception.TokenNoEncontradoException;
+import com.project.FoodHub.exception.TokenExpiradoException;
+import com.project.FoodHub.registration.token.TokenConfirmacion;
+import com.project.FoodHub.registration.token.TokenConfirmacionService;
 import com.project.FoodHub.service.ColegiadoService;
 import com.project.FoodHub.service.CreadorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -17,6 +25,7 @@ public class RegistroService {
     private final ColegiadoService colegiadoService;
     private final CreadorService creadorService;
     private final EmailSender emailSender;
+    private final TokenConfirmacionService confirmationTokenService;
 
 
     public String registrar(CreadorRequest request) {
@@ -43,6 +52,30 @@ public class RegistroService {
         emailSender.enviarConfirmacionCuenta(request.getEmail(), request.getNombre(), link);
 
         return "created";
+    }
+
+    @Transactional
+    public String confirmToken(String token) {
+        TokenConfirmacion confirmationToken = confirmationTokenService
+                .getToken(token)
+                .orElseThrow(() ->
+                        new TokenNoEncontradoException("Token no encontrado"));
+
+        if (confirmationToken.getConfirmedAt() != null) {
+            throw new CorreoConfirmadoException("Correo electrónico ya confirmado");
+        }
+
+        LocalDateTime expiredAt = confirmationToken.getExpiresAt();
+
+        if (expiredAt.isBefore(LocalDateTime.now())) {
+            throw new TokenExpiradoException("Token expirado");
+        }
+
+        confirmationTokenService.setConfirmedAt(token);
+        creadorService.enableUser(
+                confirmationToken.getCreador().getCorreoElectronico());
+
+        return "confirmed";
     }
 
 }
