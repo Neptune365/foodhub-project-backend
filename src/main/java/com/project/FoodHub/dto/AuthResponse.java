@@ -6,10 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
-public class CreadorDTO {
-    private String identificador;
-    private String contrasena;
+@NoArgsConstructor
+@AllArgsConstructor
+public class AuthResponse {
+    private String token;
 }

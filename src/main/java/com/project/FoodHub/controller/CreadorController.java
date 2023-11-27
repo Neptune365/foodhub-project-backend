@@ -1,8 +1,10 @@
 package com.project.FoodHub.controller;
 
-import com.project.FoodHub.dto.CreadorDTO;
+import com.project.FoodHub.dto.AuthRequest;
+import com.project.FoodHub.dto.AuthResponse;
 import com.project.FoodHub.entity.Creador;
 import com.project.FoodHub.service.CreadorService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,18 +21,6 @@ public class CreadorController {
     @GetMapping("/todos")
     public List<Creador> mostrarCreador() {
         return creadorService.mostrarCreadores();
-    }
-
-    @PostMapping("/registro")
-    public ResponseEntity<String> crearCuenta(@RequestBody Creador creador) {
-        creadorService.crearCuenta(creador);
-        return ResponseEntity.ok("Creador creado exitosamente");
-    }
-
-    @PostMapping("/logeo")
-    public ResponseEntity<String> iniciarSesion(@RequestBody CreadorDTO creadorDTO) {
-        creadorService.iniciarSesion(creadorDTO);
-        return ResponseEntity.ok("Ha iniciado sesión");
     }
 
     @GetMapping("/{creadorId}/cantidadRecetas")
