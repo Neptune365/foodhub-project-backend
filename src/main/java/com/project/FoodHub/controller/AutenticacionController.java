@@ -22,7 +22,7 @@ public class AutenticacionController {
 
     @GetMapping(path = "confirm")
     public String confirm(@RequestParam("token") String token) {
-        return registroService.confirmToken(token);
+        return registroService.confirmarToken(token);
     }
 
 }

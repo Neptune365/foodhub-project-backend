@@ -26,7 +26,7 @@ public class CreadorRequest {
 
     @NotBlank(message = "Por favor agrega un correo")
     @Email(message = "Por favor agrega un correo válido")
-    private String email;
+    private String correoElectronico;
 
     @NotBlank(message = "Por favor agrega una contraseña")
     @Pattern(regexp = "^(?=.*[0-9])(?=.*[A-Z]).*$", message = "La contraseña debe contener al menos un número y una letra mayúscula")
