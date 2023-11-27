@@ -1,26 +1,29 @@
 package com.project.FoodHub.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
 @Table(name = "ingrediente")
 public class Ingrediente {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ingrediente_id")
-    private Long id;
+    private Long idIngrediente;
 
-    @Column(name = "ingrediente", nullable = false)
+    @Column(name = "ingrediete", nullable = false)
     private String ingrediente;
 
     @ManyToOne
-    @JoinColumn(name = "receta_id")
+    @JoinColumn(name = "id_receta")
+    @JsonIgnore
     private Receta receta;
+
 }

@@ -18,7 +18,7 @@ public class Receta {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "receta_id")
+    @Column(name = "id_receta")
     private Long id;
 
     @Column(name = "titulo", nullable = false)
@@ -36,11 +36,11 @@ public class Receta {
     @Column(name = "calorias", nullable = false)
     private Double calorias;
 
-    @Column(name = "imagen_receta", nullable = false)
-    private String imagenReceta;
+    @Column(name = "imagen", nullable = false)
+    private String imagen;
 
     @ManyToOne
-    @JoinColumn(name = "creador_id")
+    @JoinColumn(name = "id_creador")
     @JsonIgnore
     private Creador creador;
 

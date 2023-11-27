@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ColegiadoRepository extends JpaRepository<Colegiado, Long> {
-
+    Colegiado findByNombreColegiadoAndApellidoPaternoColegiadoAndAndAppellidoMaternoColegiadoAndCodigoColegiado(
+            String nombre, String apellidoPaterno, String apellidoMaterno, String codigo);
 
 }

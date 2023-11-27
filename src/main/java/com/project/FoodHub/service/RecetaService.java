@@ -56,7 +56,7 @@ public class RecetaService {
             RecetaDTO recetaDTO = RecetaDTO.builder()
                     .titulo(receta.getTitulo())
                     .descripcion(receta.getDescripcion())
-                    .imagenReceta(receta.getImagenReceta())
+                    .imagenReceta(receta.getImagen())
                     .build();
             recetasDTO.add(recetaDTO);
         }

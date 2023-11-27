@@ -4,7 +4,11 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
 import java.util.List;
 
 @Data
@@ -12,12 +16,12 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "creador")
-public class Creador {
+public class Creador implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "creador_id")
-    private Long id;
+    @Column(name = "id_creador")
+    private Long creador_id;
 
     @Column(name = "nombre", nullable = false)
     private String nombre;
@@ -26,21 +30,69 @@ public class Creador {
     private String apellidoPaterno;
 
     @Column(name = "apellido_materno", nullable = false)
-    private String apellidoMaterno;
+    private String appellidoMaterno;
 
     @Column(name = "correo_electronico", nullable = false)
     private String correoElectronico;
 
-    @Column(name = "contrasena", nullable = false)
-    private String contrasena;
+    @Column(name = "contraseña", nullable = false)
+    private String contrasenia;
 
     @Column(name = "codigo_colegiatura", nullable = false)
     private String codigoColegiatura;
 
-    @Column(name = "foto_perfil", nullable = true)
-    private String fotoPerfil;
-
     @OneToMany(mappedBy = "creador")
     private List<Receta> recetas;
 
+    @Enumerated(EnumType.STRING)
+    private Rol role;
+
+    public Creador(String nombre,
+                   String apellidoPaterno,
+                   String apellidoMaterno,
+                   String email,
+                   String contrasenia,
+                   String codigoColegiatura) {
+        this.nombre = nombre;
+        this.apellidoPaterno = apellidoPaterno;
+        this.appellidoMaterno = apellidoMaterno;
+        this.correoElectronico = email;
+        this.contrasenia = contrasenia;
+        this.codigoColegiatura = codigoColegiatura;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(role.name()));
+    }
+
+    @Override
+    public String getPassword() {
+        return contrasenia;
+    }
+
+    @Override
+    public String getUsername() {
+        return correoElectronico;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return false;
+    }
 }

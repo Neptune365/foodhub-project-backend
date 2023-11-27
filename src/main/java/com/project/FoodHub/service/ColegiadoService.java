@@ -12,7 +12,9 @@ public class ColegiadoService {
     private final ColegiadoRepository colegiadoRepository;
 
 //    POR DESARROLLAR
-    public String validarColegiado(String nombreColegiado, String apellidoPaternoColegiado, String apellidoMaternoColegiado, String codigoColegiado, Colegiado colegiado) {
-        return "";
+    public boolean validarColegiado(String nombre, String apellidoPaterno, String apellidoMaterno, String codigoColegiado) {
+        Colegiado colegiado = colegiadoRepository.findByNombreColegiadoAndApellidoPaternoColegiadoAndAndAppellidoMaternoColegiadoAndCodigoColegiado(
+            nombre, apellidoPaterno, apellidoMaterno, codigoColegiado);
+        return colegiado != null;
     }
 }
