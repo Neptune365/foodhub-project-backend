@@ -10,6 +10,8 @@ import java.util.Optional;
 
 @Repository
 public interface CreadorRepository extends JpaRepository<Creador, Long> {
+
+    Optional<Creador> findByIdCreador(Long idCreador);
     Creador findByCorreoElectronico(String correoElectronico);
 
     @Modifying

@@ -44,10 +44,10 @@ public class Receta {
     @JsonIgnore
     private Creador creador;
 
-    @OneToMany(mappedBy = "receta", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "receta", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Ingrediente> ingredientes;
 
-    @OneToMany(mappedBy = "receta", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "receta", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Instruccion> instrucciones;
 
     @Enumerated(EnumType.STRING)

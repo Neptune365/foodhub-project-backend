@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/receta")
+@RequestMapping("/explorar")
 @RequiredArgsConstructor
 public class RecetaController {
 
@@ -35,9 +35,9 @@ public class RecetaController {
         return ResponseEntity.ok(recetasDTO);
     }
 
-    @GetMapping("/{creadoId}")
-    public ResponseEntity<Receta> verReceta(@PathVariable Long creadorId) {
-        Receta receta = recetaService.verReceta(creadorId);
+    @GetMapping("/receta")
+    public ResponseEntity<Receta> verReceta(@RequestParam Long idReceta) {
+        Receta receta = recetaService.verReceta(idReceta);
         return ResponseEntity.ok(receta);
     }
 
