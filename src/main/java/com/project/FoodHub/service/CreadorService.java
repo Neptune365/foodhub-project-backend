@@ -1,6 +1,8 @@
 package com.project.FoodHub.service;
 
-import com.project.FoodHub.dto.CreadorDTO;
+import com.project.FoodHub.config.Jwt.JwtService;
+import com.project.FoodHub.dto.AuthRequest;
+import com.project.FoodHub.dto.AuthResponse;
 import com.project.FoodHub.entity.Creador;
 import com.project.FoodHub.entity.Receta;
 import com.project.FoodHub.entity.Rol;
@@ -9,10 +11,17 @@ import com.project.FoodHub.registration.token.TokenConfirmacion;
 import com.project.FoodHub.registration.token.TokenConfirmacionService;
 import com.project.FoodHub.repository.CreadorRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,6 +32,9 @@ public class CreadorService {
     private final CreadorRepository creadorRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenConfirmacionService tokenConfirmacionService;
+    private final JwtService jwtService;
+    private final AuthenticationManager authenticationManager;
+
 
     public List<Creador> mostrarCreadores() {
         return creadorRepository.findAll();
@@ -51,10 +63,11 @@ public class CreadorService {
         return token;
 
     }
-    public void iniciarSesion(CreadorDTO creadorDTO) {
-        String identificador = creadorDTO.getIdentificador();
-        String contrasena = creadorDTO.getContrasena();
-        Creador creador = null;
+    public AuthResponse iniciarSesion(AuthRequest authRequest) {
+        String identificador = authRequest.getIdentificador();
+        String contrasenia = authRequest.getContrasenia();
+
+        Creador creador;
 
         if (identificador.contains("@")) {
             creador = creadorRepository.findByCorreoElectronico(identificador);
@@ -62,10 +75,22 @@ public class CreadorService {
             creador = creadorRepository.findByCodigoColegiatura(identificador);
         }
 
-        if (creador != null && creador.getContrasenia().equals(contrasena)) {
-            System.out.println("Inicio de sesión exitoso para " + identificador);
+        if (creador != null && passwordEncoder.matches(contrasenia, creador.getContrasenia())) {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(creador, contrasenia)
+            );
+
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            String jwtToken = jwtService.generateToken(creador.getCreador_id().toString(), new HashMap<>(), creador);
+
+            return AuthResponse.builder().token(jwtToken).build();
         } else {
-            System.out.println("Inicio de sesión fallido para " + identificador);
+            if (creador == null) {
+                throw new UsernameNotFoundException("Usuario no encontrado");
+            } else {
+                throw new BadCredentialsException("Credenciales inválidas");
+            }
         }
     }
 

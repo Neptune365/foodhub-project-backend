@@ -52,7 +52,7 @@ public class RegistroService {
             throw new CuentaNoCreadaException("No se pudo crear la cuenta correctamente.");
         }
 
-        String link = "http://localhost:8083/api/auth/confirm?token=" + token;
+        String link = "http://localhost:8083/auth/confirm?token=" + token;
         emailSender.enviarConfirmacionCuenta(request.getCorreoElectronico(), request.getNombre(), link);
 
         return "created";

@@ -22,8 +22,8 @@ public class JwtService {
     public String generateToken(UserDetails userDetails){
         return generateToken("", new HashMap<>(), userDetails);
     }
-    public String generateToken(String teacherId, Map<String, Object> extraClaims, UserDetails userDetails) {
-        extraClaims.put("teacherId", teacherId);
+    public String generateToken(String idCreador, Map<String, Object> extraClaims, UserDetails userDetails) {
+        extraClaims.put("idCreador", idCreador);
         return Jwts.builder()
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
