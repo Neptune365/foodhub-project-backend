@@ -8,6 +8,7 @@ import com.project.FoodHub.entity.Receta;
 import com.project.FoodHub.entity.Rol;
 import com.project.FoodHub.exception.CorreoExistenteException;
 import com.project.FoodHub.exception.CreadorNoEncontradoException;
+import com.project.FoodHub.exception.UsuarioNoAutenticadoException;
 import com.project.FoodHub.registration.token.TokenConfirmacion;
 import com.project.FoodHub.registration.token.TokenConfirmacionService;
 import com.project.FoodHub.repository.CreadorRepository;
@@ -103,15 +104,13 @@ public class CreadorService {
     public void modificarPerfil(String fotoPerfil){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
-            throw new AuthenticationCredentialsNotFoundException("Usuario no autenticado");
+            throw new UsuarioNoAutenticadoException("Usuario no autenticado");
         }
 
-        String username = authentication.getName();
+        Long idCreador = ((Creador) authentication.getPrincipal()).getIdCreador();
 
-        Creador creador = creadorRepository.findByCorreoElectronico(username);
-        if (creador == null) {
-            throw new IllegalArgumentException("Creador no encontrado para el usuario: " + username);
-        }
+        Creador creador = creadorRepository.findByIdCreador(idCreador)
+                .orElseThrow(() -> new CreadorNoEncontradoException("Creador no encontrado con ID: " + idCreador));
 
         creador.setFotoPerfil(fotoPerfil);
         creadorRepository.save(creador);

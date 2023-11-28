@@ -23,6 +23,11 @@ import java.util.Map;
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
 
+    @ExceptionHandler(UsuarioNoAutenticadoException.class)
+    public ResponseEntity<ErrorMessage> handleUsuarioNoAutenticadoException(UsuarioNoAutenticadoException exception) {
+        ErrorMessage errorMessage = new ErrorMessage(LocalDateTime.now(), HttpStatus.UNAUTHORIZED.value(), exception.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorMessage);
+    }
     @ExceptionHandler(ColegiadoNoEncontradoException.class)
     public ResponseEntity<ErrorMessage> handleColegiadoNoEncontradoException(ColegiadoNoEncontradoException exception) {
         ErrorMessage messageException = new ErrorMessage(LocalDateTime.now(), HttpStatus.NOT_FOUND.value(), exception.getMessage());
