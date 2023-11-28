@@ -22,9 +22,15 @@ import java.util.Map;
 @RestControllerAdvice
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
+    @ExceptionHandler(RecetaNoEncontradaException.class)
+    public ResponseEntity<ErrorMessage> handleRecetaNoEncontradaException(RecetaNoEncontradaException exception) {
+        ErrorMessage messageException = new ErrorMessage(LocalDateTime.now(), HttpStatus.NOT_FOUND.value(), exception.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(messageException);
+    }
     @ExceptionHandler(CreadorNoEncontradoException.class)
-    public ResponseEntity<String> handleCreadorNotFoundException(CreadorNoEncontradoException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    public ResponseEntity<ErrorMessage> handleCreadorNotFoundException(CreadorNoEncontradoException exception) {
+        ErrorMessage messageException = new ErrorMessage(LocalDateTime.now(), HttpStatus.NOT_FOUND.value(), exception.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(messageException);
     }
 
     @ExceptionHandler(TokenNoEncontradoException.class)
