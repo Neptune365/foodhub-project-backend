@@ -12,12 +12,11 @@ import lombok.NoArgsConstructor;
 @Table(name = "colegiado")
 public class Colegiado {
 
-//    PROPIO DE LA ENTIDAD - BASE DE DATOS
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_colegiado")
     private Long id;
-//
+
     @Column(name = "nombre_colegiado", nullable = false)
     private String nombreColegiado;
 
