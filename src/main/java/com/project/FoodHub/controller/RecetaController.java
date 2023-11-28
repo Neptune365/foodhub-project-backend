@@ -1,10 +1,8 @@
 package com.project.FoodHub.controller;
 
-import com.project.FoodHub.dto.RecetaDTO;
-import com.project.FoodHub.dto.RecetaDTORequest;
+import com.project.FoodHub.dto.RecetasCategoriaResponse;
+import com.project.FoodHub.dto.RecetaRequest;
 import com.project.FoodHub.entity.Categoria;
-import com.project.FoodHub.entity.Ingrediente;
-import com.project.FoodHub.entity.Instruccion;
 import com.project.FoodHub.entity.Receta;
 import com.project.FoodHub.service.RecetaService;
 import lombok.RequiredArgsConstructor;
@@ -24,14 +22,14 @@ public class RecetaController {
     @PostMapping("/crear")
     public ResponseEntity<String> crearReceta(
             @RequestParam Long creadorId,
-            @RequestBody RecetaDTORequest recetaDTORequest) {
-        recetaService.crearReceta(creadorId, recetaDTORequest);
+            @RequestBody RecetaRequest recetaRequest) {
+        recetaService.crearReceta(creadorId, recetaRequest);
         return new ResponseEntity<>("Receta creada exitosamente", HttpStatus.CREATED);
     }
 
     @GetMapping("/categoria")
-    public ResponseEntity<List<RecetaDTO>> mostrarRecetasPorCategoria(@RequestParam Categoria categoria) {
-        List<RecetaDTO> recetasDTO = recetaService.mostrarRecetasPorCategoria(categoria);
+    public ResponseEntity<List<RecetasCategoriaResponse>> mostrarRecetasPorCategoria(@RequestParam Categoria categoria) {
+        List<RecetasCategoriaResponse> recetasDTO = recetaService.mostrarRecetasPorCategoria(categoria);
         return ResponseEntity.ok(recetasDTO);
     }
 

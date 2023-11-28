@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class RecetaDTO {
+public class RecetasCategoriaResponse {
     private String titulo;
     private String descripcion;
     private String imagenReceta;

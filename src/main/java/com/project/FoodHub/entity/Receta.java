@@ -3,12 +3,14 @@ package com.project.FoodHub.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -53,19 +55,5 @@ public class Receta {
     @Enumerated(EnumType.STRING)
     @Column(name = "categoria", nullable = false)
     private Categoria categoria;
-
-    public void añadirIngrediente(Ingrediente ingrediente) {
-        if (ingredientes == null) {
-            ingredientes = new ArrayList<>();
-        }
-        ingredientes.add(ingrediente);
-    }
-
-    public void añadirInstruccion(Instruccion instruccion) {
-        if (instrucciones == null) {
-            instrucciones = new ArrayList<>();
-        }
-        instrucciones.add(instruccion);
-    }
 
 }

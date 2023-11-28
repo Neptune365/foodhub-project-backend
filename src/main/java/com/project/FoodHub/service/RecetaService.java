@@ -1,7 +1,7 @@
 package com.project.FoodHub.service;
 
-import com.project.FoodHub.dto.RecetaDTO;
-import com.project.FoodHub.dto.RecetaDTORequest;
+import com.project.FoodHub.dto.RecetasCategoriaResponse;
+import com.project.FoodHub.dto.RecetaRequest;
 import com.project.FoodHub.entity.*;
 import com.project.FoodHub.repository.CreadorRepository;
 import com.project.FoodHub.repository.IngredienteRepository;
@@ -25,59 +25,69 @@ public class RecetaService {
 
 
     @Transactional
-    public void crearReceta(Long creadorId, RecetaDTORequest recetaDTORequest) {
+    public void crearReceta(Long creadorId, RecetaRequest recetaRequest) {
         Creador creador = creadorRepository.findById(creadorId)
                 .orElseThrow(() -> new RuntimeException("Creador no encontrado con ID: " + creadorId));
 
-        Receta receta = recetaDTORequest.getReceta();
-        Categoria categoria = recetaDTORequest.getCategoria();
-        List<Ingrediente> ingredientes = recetaDTORequest.getIngredientes();
-        List<Instruccion> instrucciones = recetaDTORequest.getInstrucciones();
+        Receta receta = Receta.builder()
+                .titulo(recetaRequest.getTitulo())
+                .descripcion(recetaRequest.getDescripcion())
+                .tiempoCoccion(recetaRequest.getTiempoCoccion())
+                .porciones(recetaRequest.getPorciones())
+                .calorias(recetaRequest.getCalorias())
+                .imagen(recetaRequest.getImagen())
+                .categoria(recetaRequest.getCategoria())
+                .creador(creador)
+                .build();
 
-        if (categoria != null) {
-            receta.setCategoria(categoria);
-        } else {
-            throw new IllegalArgumentException("La categoría no puede ser nula");
+        for (Ingrediente ingrediente : recetaRequest.getIngredientes()) {
+            agregarIngrediente(receta, ingrediente);
         }
 
-        receta.setCreador(creador);
-
-        for (Ingrediente ingrediente : ingredientes) {
-            receta.añadirIngrediente(ingrediente);
+        for (Instruccion instruccion : recetaRequest.getInstrucciones()) {
+            agregarInstruccion(receta, instruccion);
         }
 
-        for (Instruccion instruccion : instrucciones) {
-            receta.añadirInstruccion(instruccion);
+    }
+
+    @Transactional
+    public void agregarIngrediente(Receta receta, Ingrediente ingrediente) {
+        if (receta.getIngredientes() == null) {
+            receta.setIngredientes(new ArrayList<>());
         }
 
-        for (Ingrediente ingrediente : ingredientes) {
-            ingrediente.setReceta(receta); // Asignar la receta al ingrediente
-            ingredienteRepository.save(ingrediente);
+        ingrediente.setReceta(receta);
+        receta.getIngredientes().add(ingrediente);
+
+        ingredienteRepository.save(ingrediente);
+        recetaRepository.save(receta);
+    }
+
+    @Transactional
+    public void agregarInstruccion(Receta receta, Instruccion instruccion) {
+        if (receta.getInstrucciones() == null) {
+            receta.setInstrucciones(new ArrayList<>());
         }
 
-        for (Instruccion instruccion : instrucciones) {
-            instruccion.setReceta(receta); // Asignar la receta a la instrucción
-            instruccionRepository.save(instruccion);
+        instruccion.setReceta(receta);
+        receta.getInstrucciones().add(instruccion);
 
-            recetaRepository.save(receta);
-        }
-
+        instruccionRepository.save(instruccion);
         recetaRepository.save(receta);
     }
 
 
-
-    public List<RecetaDTO> mostrarRecetasPorCategoria(Categoria categoria) {
+    public List<RecetasCategoriaResponse> mostrarRecetasPorCategoria(Categoria categoria) {
         List<Receta> recetas = recetaRepository.findByCategoria(categoria);
-        List<RecetaDTO> recetasDTO = new ArrayList<>();
+        List<RecetasCategoriaResponse> recetasDTO = new ArrayList<>();
 
         for (Receta receta : recetas) {
-            RecetaDTO recetaDTO = RecetaDTO.builder()
+            RecetasCategoriaResponse recetasCategoriaResponse = RecetasCategoriaResponse.builder()
                     .titulo(receta.getTitulo())
                     .descripcion(receta.getDescripcion())
                     .imagenReceta(receta.getImagen())
                     .build();
-            recetasDTO.add(recetaDTO);
+            recetasDTO.add(recetasCategoriaResponse);
         }
 
         return recetasDTO;
