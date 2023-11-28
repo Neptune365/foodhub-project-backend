@@ -9,8 +9,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ColegiadoRepository extends JpaRepository<Colegiado, Long> {
-    Colegiado findByNombreColegiadoAndApellidoPaternoColegiadoAndAndAppellidoMaternoColegiadoAndCodigoColegiado(
-            String nombre, String apellidoPaterno, String apellidoMaterno, String codigo);
+    boolean existsByNombreColegiadoAndApellidoPaternoColegiadoAndAppellidoMaternoColegiadoAndCodigoColegiado(
+            String nombre, String apellidoPaterno, String apellidoMaterno, String codigoColegiado);
 
     boolean existsByCuentaConfirmadaFalseAndCodigoColegiado(String codigoColegiado);
 
@@ -19,4 +19,6 @@ public interface ColegiadoRepository extends JpaRepository<Colegiado, Long> {
             "SET c.cuentaConfirmada = true " +
             "WHERE c.codigoColegiado = :codigoColegiado")
     void confirmarCuenta(@Param("codigoColegiado") String codigoColegiado);
+
+    boolean existsByCodigoColegiado(String codigoColegiado);
 }

@@ -1,6 +1,6 @@
 package com.project.FoodHub.service;
 
-import com.project.FoodHub.entity.Colegiado;
+import com.project.FoodHub.exception.ColegiadoNoEncontradoException;
 import com.project.FoodHub.repository.ColegiadoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,9 +13,8 @@ public class ColegiadoService {
     private final ColegiadoRepository colegiadoRepository;
 
     public boolean validarColegiado(String nombre, String apellidoPaterno, String apellidoMaterno, String codigoColegiado) {
-        Colegiado colegiado = colegiadoRepository.findByNombreColegiadoAndApellidoPaternoColegiadoAndAndAppellidoMaternoColegiadoAndCodigoColegiado(
-            nombre, apellidoPaterno, apellidoMaterno, codigoColegiado);
-        return colegiado != null;
+        return colegiadoRepository.existsByNombreColegiadoAndApellidoPaternoColegiadoAndAppellidoMaternoColegiadoAndCodigoColegiado(
+                nombre, apellidoPaterno, apellidoMaterno, codigoColegiado);
     }
 
     @Transactional
@@ -25,7 +24,11 @@ public class ColegiadoService {
 
     @Transactional
     public void confirmarCuenta(String codigoColegiado) {
-        colegiadoRepository.confirmarCuenta(codigoColegiado);
+        if (colegiadoRepository.existsByCodigoColegiado(codigoColegiado)) {
+            colegiadoRepository.confirmarCuenta(codigoColegiado);
+        } else {
+            throw new ColegiadoNoEncontradoException("Colegiado no encontrado con código: " + codigoColegiado);
+        }
     }
 
 }
