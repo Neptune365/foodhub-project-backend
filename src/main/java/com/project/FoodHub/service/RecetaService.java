@@ -4,6 +4,7 @@ import com.project.FoodHub.dto.RecetasCategoriaResponse;
 import com.project.FoodHub.dto.RecetaRequest;
 import com.project.FoodHub.entity.*;
 import com.project.FoodHub.exception.CreadorNoEncontradoException;
+import com.project.FoodHub.exception.RecetaNoEncontradaException;
 import com.project.FoodHub.repository.CreadorRepository;
 import com.project.FoodHub.repository.IngredienteRepository;
 import com.project.FoodHub.repository.InstruccionRepository;
@@ -80,7 +81,7 @@ public class RecetaService {
 
     public List<RecetasCategoriaResponse> mostrarRecetasPorCategoria(Categoria categoria) {
         List<Receta> recetas = recetaRepository.findByCategoria(categoria);
-        List<RecetasCategoriaResponse> recetasDTO = new ArrayList<>();
+        List<RecetasCategoriaResponse> recetasResponse = new ArrayList<>();
 
         for (Receta receta : recetas) {
             RecetasCategoriaResponse recetasCategoriaResponse = RecetasCategoriaResponse.builder()
@@ -88,15 +89,15 @@ public class RecetaService {
                     .descripcion(receta.getDescripcion())
                     .imagenReceta(receta.getImagen())
                     .build();
-            recetasDTO.add(recetasCategoriaResponse);
+            recetasResponse.add(recetasCategoriaResponse);
         }
 
-        return recetasDTO;
+        return recetasResponse;
     }
 
     public Receta verReceta(Long idReceta) {
         return recetaRepository.findById(idReceta)
-                .orElseThrow(() -> new RuntimeException("Receta no encontrada"));
+                .orElseThrow(() -> new RecetaNoEncontradaException("Receta no encontrada"));
     }
 
 }
