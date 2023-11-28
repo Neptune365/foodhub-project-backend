@@ -3,6 +3,7 @@ package com.project.FoodHub.service;
 import com.project.FoodHub.dto.RecetasCategoriaResponse;
 import com.project.FoodHub.dto.RecetaRequest;
 import com.project.FoodHub.entity.*;
+import com.project.FoodHub.exception.CreadorNoEncontradoException;
 import com.project.FoodHub.repository.CreadorRepository;
 import com.project.FoodHub.repository.IngredienteRepository;
 import com.project.FoodHub.repository.InstruccionRepository;
@@ -27,7 +28,7 @@ public class RecetaService {
     @Transactional
     public void crearReceta(Long creadorId, RecetaRequest recetaRequest) {
         Creador creador = creadorRepository.findById(creadorId)
-                .orElseThrow(() -> new RuntimeException("Creador no encontrado con ID: " + creadorId));
+                .orElseThrow(() -> new CreadorNoEncontradoException("Creador no encontrado con ID: " + creadorId));
 
         Receta receta = Receta.builder()
                 .titulo(recetaRequest.getTitulo())

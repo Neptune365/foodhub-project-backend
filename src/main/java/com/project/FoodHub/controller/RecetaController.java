@@ -5,6 +5,7 @@ import com.project.FoodHub.dto.RecetaRequest;
 import com.project.FoodHub.entity.Categoria;
 import com.project.FoodHub.entity.Receta;
 import com.project.FoodHub.service.RecetaService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,7 @@ public class RecetaController {
     @PostMapping("/crear")
     public ResponseEntity<String> crearReceta(
             @RequestParam Long creadorId,
-            @RequestBody RecetaRequest recetaRequest) {
+            @Valid @RequestBody RecetaRequest recetaRequest) {
         recetaService.crearReceta(creadorId, recetaRequest);
         return new ResponseEntity<>("Receta creada exitosamente", HttpStatus.CREATED);
     }
