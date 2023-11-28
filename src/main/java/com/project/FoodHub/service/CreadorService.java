@@ -7,9 +7,11 @@ import com.project.FoodHub.entity.Creador;
 import com.project.FoodHub.entity.Receta;
 import com.project.FoodHub.entity.Rol;
 import com.project.FoodHub.exception.CorreoExistenteException;
+import com.project.FoodHub.exception.CreadorNoEncontradoException;
 import com.project.FoodHub.registration.token.TokenConfirmacion;
 import com.project.FoodHub.registration.token.TokenConfirmacionService;
 import com.project.FoodHub.repository.CreadorRepository;
+import com.project.FoodHub.repository.RecetaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -36,6 +38,7 @@ public class CreadorService {
     private final TokenConfirmacionService tokenConfirmacionService;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final RecetaRepository recetaRepository;
 
 
     public List<Creador> mostrarCreadores() {
@@ -115,16 +118,10 @@ public class CreadorService {
     }
 
     public Integer obtenerCantidadDeRecetasCreadas(Long idCreador){
-        Creador creador = creadorRepository.findByIdCreador(idCreador).orElse(null);
+        Creador creador = creadorRepository.findByIdCreador(idCreador)
+                .orElseThrow(() -> new CreadorNoEncontradoException("Creador no encontrado con ID: " + idCreador));
 
-        if (creador != null) {
-            List<Receta> recetasDelCreador = creador.getRecetas();
-            if (recetasDelCreador != null) {
-                return recetasDelCreador.size();
-            }
-        }
-
-        return 0;
+        return recetaRepository.countByCreador(creador);
     }
 
     public int enableUser(String email) {
