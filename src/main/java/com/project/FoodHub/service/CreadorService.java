@@ -11,6 +11,7 @@ import com.project.FoodHub.registration.token.TokenConfirmacion;
 import com.project.FoodHub.registration.token.TokenConfirmacionService;
 import com.project.FoodHub.repository.CreadorRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,6 +20,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -92,6 +94,24 @@ public class CreadorService {
                 throw new BadCredentialsException("Credenciales inválidas");
             }
         }
+    }
+
+    @Transactional
+    public void modificarPerfil(String fotoPerfil){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new AuthenticationCredentialsNotFoundException("Usuario no autenticado");
+        }
+
+        String username = authentication.getName();
+
+        Creador creador = creadorRepository.findByCorreoElectronico(username);
+        if (creador == null) {
+            throw new IllegalArgumentException("Creador no encontrado para el usuario: " + username);
+        }
+
+        creador.setFotoPerfil(fotoPerfil);
+        creadorRepository.save(creador);
     }
 
     public Integer obtenerCantidadDeRecetasCreadas(Long idCreador){

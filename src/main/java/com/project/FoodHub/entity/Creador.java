@@ -50,6 +50,9 @@ public class Creador implements UserDetails {
     @Column(name = "enabled")
     private Boolean enabled = false;
 
+    @Column(name = "foto_perfil")
+    private String fotoPerfil;
+
     public Creador(String nombre,
                    String apellidoPaterno,
                    String apellidoMaterno,

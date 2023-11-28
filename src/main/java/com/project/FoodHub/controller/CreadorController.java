@@ -2,6 +2,7 @@ package com.project.FoodHub.controller;
 
 import com.project.FoodHub.dto.AuthRequest;
 import com.project.FoodHub.dto.AuthResponse;
+import com.project.FoodHub.dto.ModificarPerfilRequest;
 import com.project.FoodHub.entity.Creador;
 import com.project.FoodHub.service.CreadorService;
 import jakarta.validation.Valid;
@@ -28,5 +29,12 @@ public class CreadorController {
         Integer cantidadRecetas = creadorService.obtenerCantidadDeRecetasCreadas(creadorId);
 
         return ResponseEntity.ok(cantidadRecetas);
+    }
+
+    @PatchMapping("/perfil")
+    public ResponseEntity<String> modificarPerfil(@Valid @RequestBody ModificarPerfilRequest request) {
+        String nuevaFotoPerfil = request.getFotoPerfil();
+        creadorService.modificarPerfil(nuevaFotoPerfil);
+        return ResponseEntity.ok("Perfil modificado con éxito");
     }
 }
