@@ -34,8 +34,8 @@ public class RecetaController {
         return ResponseEntity.ok(recetasDTO);
     }
 
-    @GetMapping("/receta")
-    public ResponseEntity<Receta> verReceta(@RequestParam Long idReceta) {
+    @GetMapping("/receta") //?id=
+    public ResponseEntity<Receta> verReceta(@RequestParam Long idReceta) { //PathVariable
         Receta receta = recetaService.verReceta(idReceta);
         return ResponseEntity.ok(receta);
     }

@@ -45,6 +45,13 @@ public class EmailService implements EmailSender{
     }
 
     private String buildEmail(String nombre, String enlace) {
+        String html_test = """
+              <html>
+                  <body>
+                      <p>%s</p>
+                  </body>
+              </html>
+              """;
         return "<div style=\"font-family:Helvetica,Arial,sans-serif;font-size:16px;margin:0;color:#64B43E\">\n" +
                 "\n" +
                 "<span style=\"display:none;font-size:1px;color:#fff;max-height:0\"></span>\n" +

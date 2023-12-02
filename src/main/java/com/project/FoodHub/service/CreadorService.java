@@ -103,7 +103,7 @@ public class CreadorService {
     @Transactional
     public void modificarPerfil(String fotoPerfil){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
+        if (authentication == null || !authentication.isAuthenticated()) { //usar Optional
             throw new UsuarioNoAutenticadoException("Usuario no autenticado");
         }
 
