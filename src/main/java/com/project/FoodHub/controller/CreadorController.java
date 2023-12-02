@@ -15,6 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/creador")
 @RequiredArgsConstructor
+@CrossOrigin("http://localhost:4200/")
 public class CreadorController {
 
     private final CreadorService creadorService;

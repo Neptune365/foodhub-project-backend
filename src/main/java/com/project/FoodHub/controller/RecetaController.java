@@ -16,6 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/explorar")
 @RequiredArgsConstructor
+@CrossOrigin("http://localhost:4200/")
 public class RecetaController {
 
     private final RecetaService recetaService;

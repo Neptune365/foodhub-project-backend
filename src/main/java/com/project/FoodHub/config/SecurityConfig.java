@@ -44,12 +44,10 @@ public class SecurityConfig {
         return new OrRequestMatcher(
                 new AntPathRequestMatcher("/auth/**"),
                 new AntPathRequestMatcher("/explorar/categoria/**"),
-                new AntPathRequestMatcher("/explorar/receta/**")
-//                new AntPathRequestMatcher("/api/activities/**"),
-//                new AntPathRequestMatcher("/api/rates/**"),
-//                new AntPathRequestMatcher("/v3/api-docs/**"),
-//                new AntPathRequestMatcher("/swagger-ui/**"),
-//                new AntPathRequestMatcher("/swagger-ui.html")
+                new AntPathRequestMatcher("/explorar/receta/**"),
+                new AntPathRequestMatcher("/v3/api-docs/**"),
+                new AntPathRequestMatcher("/swagger-ui/**"),
+                new AntPathRequestMatcher("/swagger-ui.html")
         );
     }
 
