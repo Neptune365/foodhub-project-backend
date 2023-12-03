@@ -6,9 +6,7 @@ import com.project.FoodHub.dto.AuthResponse;
 import com.project.FoodHub.entity.Creador;
 import com.project.FoodHub.entity.Receta;
 import com.project.FoodHub.entity.Rol;
-import com.project.FoodHub.exception.CorreoExistenteException;
-import com.project.FoodHub.exception.CreadorNoEncontradoException;
-import com.project.FoodHub.exception.UsuarioNoAutenticadoException;
+import com.project.FoodHub.exception.*;
 import com.project.FoodHub.registration.token.TokenConfirmacion;
 import com.project.FoodHub.registration.token.TokenConfirmacionService;
 import com.project.FoodHub.repository.CreadorRepository;
@@ -28,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -46,7 +45,7 @@ public class CreadorService {
         return creadorRepository.findAll();
     }
 
-    public String crearCuenta(Creador creador) {
+    public Optional<String> crearCuenta(Creador creador) {
         if (creadorRepository.findCreadorByCorreoElectronico(creador.getCorreoElectronico()).isPresent()) {
             throw new CorreoExistenteException("Correo ingresado ya existe");
         }
@@ -66,8 +65,7 @@ public class CreadorService {
 
         tokenConfirmacionService.saveConfirmationToken(tokenConfirmacion);
 
-        return token;
-
+        return Optional.of(token);
     }
     public AuthResponse iniciarSesion(AuthRequest authRequest) {
         String identificador = authRequest.getIdentificador();
@@ -76,12 +74,18 @@ public class CreadorService {
         Creador creador;
 
         if (identificador.contains("@")) {
-            creador = creadorRepository.findByCorreoElectronico(identificador);
+            creador = creadorRepository.findCreadorByCorreoElectronico(identificador)
+                    .orElseThrow(() -> new UsuarioNoValidoException("Usuario no válido"));
         } else {
-            creador = creadorRepository.findByCodigoColegiatura(identificador);
+            creador = creadorRepository.findByCodigoColegiatura(identificador)
+                    .orElseThrow(() -> new UsuarioNoValidoException("Usuario no válido"));
         }
 
-        if (creador != null && passwordEncoder.matches(contrasenia, creador.getContrasenia())) {
+        if (!creador.getEnabled()) {
+            throw new CuentaNoConfirmadaException("Cuenta no confirmada");
+        }
+
+        if (passwordEncoder.matches(contrasenia, creador.getContrasenia())) {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(creador, contrasenia)
             );
@@ -92,31 +96,23 @@ public class CreadorService {
 
             return AuthResponse.builder().token(jwtToken).build();
         } else {
-            if (creador == null) {
-                throw new UsernameNotFoundException("Usuario no encontrado");
-            } else {
-                throw new BadCredentialsException("Credenciales inválidas");
-            }
+            throw new UsuarioNoValidoException("Credenciales inválidas");
         }
     }
 
     @Transactional
     public void modificarPerfil(String fotoPerfil){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) { //usar Optional
-            throw new UsuarioNoAutenticadoException("Usuario no autenticado");
-        }
-
-        Long idCreador = ((Creador) authentication.getPrincipal()).getIdCreador();
+        Long idCreador = obtenerIdCreadorAutenticado();
 
         Creador creador = creadorRepository.findByIdCreador(idCreador)
                 .orElseThrow(() -> new CreadorNoEncontradoException("Creador no encontrado con ID: " + idCreador));
 
         creador.setFotoPerfil(fotoPerfil);
-        creadorRepository.save(creador);
     }
 
-    public Integer obtenerCantidadDeRecetasCreadas(Long idCreador){
+    public Integer obtenerCantidadDeRecetasCreadas(){
+        Long idCreador = obtenerIdCreadorAutenticado();
+
         Creador creador = creadorRepository.findByIdCreador(idCreador)
                 .orElseThrow(() -> new CreadorNoEncontradoException("Creador no encontrado con ID: " + idCreador));
 
@@ -125,5 +121,17 @@ public class CreadorService {
 
     public int enableUser(String email) {
         return creadorRepository.enableUser(email);
+    }
+
+    private Long obtenerIdCreadorAutenticado() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        validarAutenticacion(authentication);
+        return ((Creador) authentication.getPrincipal()).getIdCreador();
+    }
+
+    private void validarAutenticacion(Authentication authentication) {
+        Optional.ofNullable(authentication)
+                .filter(Authentication::isAuthenticated)
+                .orElseThrow(() -> new UsuarioNoAutenticadoException("Usuario no autenticado"));
     }
 }

@@ -51,7 +51,6 @@ public class Creador implements UserDetails {
     private Boolean enabled = false;
 
     @Column(name = "foto_perfil", columnDefinition = "TEXT")
-    @Lob
     private String fotoPerfil;
 
     public Creador(String nombre,

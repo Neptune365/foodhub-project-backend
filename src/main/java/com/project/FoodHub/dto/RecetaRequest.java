@@ -52,5 +52,5 @@ public class RecetaRequest {
 
     @NotNull(message = "La lista de instrucciones no puede ser nula")
     @Size(min = 1, message = "Debe haber al menos una instrucción")
-    private List<Instruccion> instrucciones;
+    private List<@Valid Instruccion> instrucciones;
 }

@@ -25,9 +25,9 @@ public class CreadorController {
         return creadorService.mostrarCreadores();
     }
 
-    @GetMapping("/{creadorId}/cantidadRecetas")
-    public ResponseEntity<Integer> obtenerCantidadRecetasCreadas(@PathVariable Long creadorId) {
-        Integer cantidadRecetas = creadorService.obtenerCantidadDeRecetasCreadas(creadorId);
+    @GetMapping("/cantidadRecetas")
+    public ResponseEntity<Integer> obtenerCantidadRecetasCreadas() {
+        Integer cantidadRecetas = creadorService.obtenerCantidadDeRecetasCreadas();
 
         return ResponseEntity.ok(cantidadRecetas);
     }

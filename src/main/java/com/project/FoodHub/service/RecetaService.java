@@ -3,18 +3,20 @@ package com.project.FoodHub.service;
 import com.project.FoodHub.dto.RecetasCategoriaResponse;
 import com.project.FoodHub.dto.RecetaRequest;
 import com.project.FoodHub.entity.*;
-import com.project.FoodHub.exception.CreadorNoEncontradoException;
-import com.project.FoodHub.exception.RecetaNoEncontradaException;
+import com.project.FoodHub.exception.*;
 import com.project.FoodHub.repository.CreadorRepository;
 import com.project.FoodHub.repository.IngredienteRepository;
 import com.project.FoodHub.repository.InstruccionRepository;
 import com.project.FoodHub.repository.RecetaRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -27,9 +29,11 @@ public class RecetaService {
 
 
     @Transactional
-    public void crearReceta(Long creadorId, RecetaRequest recetaRequest) {
-        Creador creador = creadorRepository.findById(creadorId)
-                .orElseThrow(() -> new CreadorNoEncontradoException("Creador no encontrado con ID: " + creadorId));
+    public void crearReceta(RecetaRequest recetaRequest) {
+        Long idCreador = obtenerIdCreadorAutenticado();
+
+        Creador creador = creadorRepository.findById(idCreador)
+                .orElseThrow(() -> new CreadorNoEncontradoException("Creador no encontrado con ID: " + idCreador));
 
         Receta receta = Receta.builder()
                 .titulo(recetaRequest.getTitulo())
@@ -78,18 +82,26 @@ public class RecetaService {
         recetaRepository.save(receta);
     }
 
-
+    @Transactional
     public List<RecetasCategoriaResponse> mostrarRecetasPorCategoria(Categoria categoria) {
-        List<Receta> recetas = recetaRepository.findByCategoria(categoria);
+        List<Optional<Receta>> recetas = recetaRepository.findByCategoria(categoria);
         List<RecetasCategoriaResponse> recetasResponse = new ArrayList<>();
 
-        for (Receta receta : recetas) {
-            RecetasCategoriaResponse recetasCategoriaResponse = RecetasCategoriaResponse.builder()
-                    .titulo(receta.getTitulo())
-                    .descripcion(receta.getDescripcion())
-                    .imagenReceta(receta.getImagen())
-                    .build();
-            recetasResponse.add(recetasCategoriaResponse);
+        if (recetas == null) {
+            throw new ListaRecetasNulaException("La lista de recetas es nula");
+        }
+
+        for (Optional<Receta> recetaOptional : recetas) {
+            Receta receta = recetaOptional.orElse(null);
+
+            if (receta != null) {
+                RecetasCategoriaResponse recetasCategoriaResponse = RecetasCategoriaResponse.builder()
+                        .titulo(receta.getTitulo())
+                        .descripcion(receta.getDescripcion())
+                        .imagenReceta(receta.getImagen())
+                        .build();
+                recetasResponse.add(recetasCategoriaResponse);
+            }
         }
 
         return recetasResponse;
@@ -98,6 +110,18 @@ public class RecetaService {
     public Receta verReceta(Long idReceta) {
         return recetaRepository.findById(idReceta)
                 .orElseThrow(() -> new RecetaNoEncontradaException("Receta no encontrada"));
+    }
+
+    private Long obtenerIdCreadorAutenticado() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        validarAutenticacion(authentication);
+        return ((Creador) authentication.getPrincipal()).getIdCreador();
+    }
+
+    private void validarAutenticacion(Authentication authentication) {
+        Optional.ofNullable(authentication)
+                .filter(Authentication::isAuthenticated)
+                .orElseThrow(() -> new UsuarioNoAutenticadoException("Usuario no autenticado"));
     }
 
 }

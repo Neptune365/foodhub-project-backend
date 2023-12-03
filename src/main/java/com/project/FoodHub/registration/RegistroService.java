@@ -1,5 +1,6 @@
 package com.project.FoodHub.registration;
 
+import com.project.FoodHub.dto.ConfirmacionResponse;
 import com.project.FoodHub.dto.CreadorRequest;
 import com.project.FoodHub.email.EmailSender;
 import com.project.FoodHub.entity.Creador;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -46,11 +48,8 @@ public class RegistroService {
                 request.getCodigoColegiatura()
         );
 
-        String token = creadorService.crearCuenta(creador);
-
-        if (token == null || token.isEmpty()) {
-            throw new CuentaNoCreadaException("No se pudo crear la cuenta correctamente.");
-        }
+        Optional<String> tokenOptional = creadorService.crearCuenta(creador);
+        String token = tokenOptional.orElseThrow(() -> new CuentaNoCreadaException("No se pudo crear la cuenta correctamente."));
 
         String link = "http://localhost:8083/auth/confirm?token=" + token;
         emailSender.enviarConfirmacionCuenta(request.getCorreoElectronico(), request.getNombre(), link);
@@ -59,20 +58,20 @@ public class RegistroService {
     }
 
     @Transactional
-    public String confirmarToken(String token) {
+    public ConfirmacionResponse confirmarToken(String token) {
         TokenConfirmacion tokenConfirmacion = tokenConfirmacionService
                 .getToken(token)
                 .orElseThrow(() ->
                         new TokenNoEncontradoException("Token no encontrado"));
 
         if (tokenConfirmacion.getConfirmedAt() != null) {
-            throw new CorreoConfirmadoException("Correo electrónico ya confirmado");
+            return new ConfirmacionResponse("Token ya confirmado", "error");
         }
 
         LocalDateTime expiredAt = tokenConfirmacion.getExpiresAt();
 
         if (expiredAt.isBefore(LocalDateTime.now())) {
-            throw new TokenExpiradoException("Token expirado");
+            return new ConfirmacionResponse("Token expirado", "error");
         }
 
         tokenConfirmacionService.setConfirmedAt(token);
@@ -80,9 +79,8 @@ public class RegistroService {
         if (colegiadoService.isCuentaConfirmada(tokenConfirmacion.getCreador().getCodigoColegiatura())) {
             colegiadoService.confirmarCuenta(tokenConfirmacion.getCreador().getCodigoColegiatura());
             creadorService.enableUser(tokenConfirmacion.getCreador().getCorreoElectronico());
-            return "confirmed";
+            return new ConfirmacionResponse("Confirmación exitosa", "success");
         } else {
-            // La cuenta ya ha sido confirmada previamente
             throw new CorreoConfirmadoException("Código de colegiado ya registrado");
         }
 

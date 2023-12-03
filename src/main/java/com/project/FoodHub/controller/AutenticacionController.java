@@ -2,6 +2,7 @@ package com.project.FoodHub.controller;
 
 import com.project.FoodHub.dto.AuthRequest;
 import com.project.FoodHub.dto.AuthResponse;
+import com.project.FoodHub.dto.ConfirmacionResponse;
 import com.project.FoodHub.dto.CreadorRequest;
 import com.project.FoodHub.registration.RegistroService;
 import com.project.FoodHub.service.CreadorService;
@@ -26,8 +27,8 @@ public class AutenticacionController {
     }
 
     @GetMapping(path = "confirm")
-    public String confirm(@RequestParam("token") String token) {
-        return registroService.confirmarToken(token);
+    public ResponseEntity<ConfirmacionResponse> confirm(@RequestParam("token") String token) {
+        return ResponseEntity.ok(registroService.confirmarToken(token));
     }
 
     @PostMapping("/login")

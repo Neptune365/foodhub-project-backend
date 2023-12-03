@@ -22,6 +22,28 @@ import java.util.Map;
 @RestControllerAdvice
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
+    @ExceptionHandler(CategoriaNoValidaException.class)
+    public ResponseEntity<ErrorMessage> handleCategoriaNoValidaException(CategoriaNoValidaException exception) {
+        ErrorMessage errorMessage = new ErrorMessage(LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(), exception.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
+    }
+
+    @ExceptionHandler(CuentaNoConfirmadaException.class)
+    public ResponseEntity<ErrorMessage> handleCuentaNoConfirmadaException(CuentaNoConfirmadaException exception) {
+        ErrorMessage errorMessage = new ErrorMessage(LocalDateTime.now(), HttpStatus.UNAUTHORIZED.value(), exception.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorMessage);
+    }
+    @ExceptionHandler(UsuarioNoValidoException.class)
+    public ResponseEntity<ErrorMessage> handleUsuarioNoValidoException(UsuarioNoValidoException exception) {
+        ErrorMessage errorMessage = new ErrorMessage(LocalDateTime.now(), HttpStatus.UNAUTHORIZED.value(), exception.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorMessage);
+    }
+
+    @ExceptionHandler(ListaRecetasNulaException.class)
+    public ResponseEntity<ErrorMessage> handleListaRecetasNulaException(ListaRecetasNulaException exception) {
+        ErrorMessage errorMessage = new ErrorMessage(LocalDateTime.now(), HttpStatus.INTERNAL_SERVER_ERROR.value(), exception.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
+    }
 
     @ExceptionHandler(UsuarioNoAutenticadoException.class)
     public ResponseEntity<ErrorMessage> handleUsuarioNoAutenticadoException(UsuarioNoAutenticadoException exception) {

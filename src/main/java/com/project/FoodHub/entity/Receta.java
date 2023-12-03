@@ -39,7 +39,6 @@ public class Receta {
     private Double calorias;
 
     @Column(name = "imagen", nullable = false, columnDefinition = "TEXT")
-    @Lob
     private String imagen;
 
     @ManyToOne

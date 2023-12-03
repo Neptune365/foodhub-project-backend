@@ -12,13 +12,12 @@ import java.util.Optional;
 public interface CreadorRepository extends JpaRepository<Creador, Long> {
 
     Optional<Creador> findByIdCreador(Long idCreador);
-    Creador findByCorreoElectronico(String correoElectronico);
 
     @Modifying
     @Query("UPDATE Creador t SET t.enabled = true WHERE t.correoElectronico = :correo")
     int enableUser(String correo);
 
-    Creador findByCodigoColegiatura(String identificador);
+    Optional<Creador> findByCodigoColegiatura(String identificador);
     Optional<Creador> findCreadorByCorreoElectronico (String correoElectronico);
 
 }
