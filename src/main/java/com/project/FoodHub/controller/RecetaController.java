@@ -4,7 +4,6 @@ import com.project.FoodHub.dto.RecetasCategoriaResponse;
 import com.project.FoodHub.dto.RecetaRequest;
 import com.project.FoodHub.entity.Categoria;
 import com.project.FoodHub.entity.Receta;
-import com.project.FoodHub.exception.CategoriaNoValidaException;
 import com.project.FoodHub.service.RecetaService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/explorar")
 @RequiredArgsConstructor
-@CrossOrigin("http://localhost:4200/")
+@CrossOrigin("http://localhost:4200")
 public class RecetaController {
 
     private final RecetaService recetaService;

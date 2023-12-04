@@ -1,7 +1,5 @@
 package com.project.FoodHub.controller;
 
-import com.project.FoodHub.dto.AuthRequest;
-import com.project.FoodHub.dto.AuthResponse;
 import com.project.FoodHub.dto.ModificarPerfilRequest;
 import com.project.FoodHub.entity.Creador;
 import com.project.FoodHub.service.CreadorService;
@@ -15,7 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/creador")
 @RequiredArgsConstructor
-@CrossOrigin("http://localhost:4200/")
+@CrossOrigin("http://localhost:4200")
 public class CreadorController {
 
     private final CreadorService creadorService;
