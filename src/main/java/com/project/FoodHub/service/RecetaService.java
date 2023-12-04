@@ -43,13 +43,12 @@ public class RecetaService {
                 .calorias(recetaRequest.getCalorias())
                 .imagen(recetaRequest.getImagen())
                 .categoria(recetaRequest.getCategoria())
+                .ingredientes(new ArrayList<>())
+                .instrucciones(new ArrayList<>())
                 .creador(creador)
                 .build();
 
-        if (receta.getInstrucciones() == null && receta.getIngredientes() == null) {
-            receta.setInstrucciones(new ArrayList<>());
-            receta.setIngredientes(new ArrayList<>());
-        }
+        recetaRepository.save(receta);
 
         for (Ingrediente ingrediente : recetaRequest.getIngredientes()) {
             agregarIngrediente(receta, ingrediente);
@@ -58,8 +57,6 @@ public class RecetaService {
         for (Instruccion instruccion : recetaRequest.getInstrucciones()) {
             agregarInstruccion(receta, instruccion);
         }
-
-        recetaRepository.save(receta);
     }
 
     @Transactional
@@ -80,24 +77,19 @@ public class RecetaService {
 
     @Transactional
     public List<RecetasCategoriaResponse> mostrarRecetasPorCategoria(Categoria categoria) {
-        List<Optional<Receta>> recetas = recetaRepository.findByCategoria(categoria);
+        Optional<List<Receta>> recetasOptional = recetaRepository.findByCategoria(categoria);
+
         List<RecetasCategoriaResponse> recetasResponse = new ArrayList<>();
 
-        if (recetas == null) {
-            throw new ListaRecetasNulaException("La lista de recetas es nula");
-        }
+        List<Receta> recetas = recetasOptional.orElseThrow(() -> new ListaRecetasNulaException("La lista de recetas es nula"));
 
-        for (Optional<Receta> recetaOptional : recetas) {
-            Receta receta = recetaOptional.orElse(null);
-
-            if (receta != null) {
-                RecetasCategoriaResponse recetasCategoriaResponse = RecetasCategoriaResponse.builder()
-                        .titulo(receta.getTitulo())
-                        .descripcion(receta.getDescripcion())
-                        .imagenReceta(receta.getImagen())
-                        .build();
-                recetasResponse.add(recetasCategoriaResponse);
-            }
+        for (Receta receta : recetas) {
+            RecetasCategoriaResponse recetasCategoriaResponse = RecetasCategoriaResponse.builder()
+                    .titulo(receta.getTitulo())
+                    .descripcion(receta.getDescripcion())
+                    .imagenReceta(receta.getImagen())
+                    .build();
+            recetasResponse.add(recetasCategoriaResponse);
         }
 
         return recetasResponse;

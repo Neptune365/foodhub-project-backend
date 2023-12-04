@@ -3,7 +3,6 @@ package com.project.FoodHub.dto;
 import com.project.FoodHub.entity.Categoria;
 import com.project.FoodHub.entity.Ingrediente;
 import com.project.FoodHub.entity.Instruccion;
-import com.project.FoodHub.entity.Receta;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
