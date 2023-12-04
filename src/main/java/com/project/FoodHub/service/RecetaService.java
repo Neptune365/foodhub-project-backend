@@ -46,6 +46,11 @@ public class RecetaService {
                 .creador(creador)
                 .build();
 
+        if (receta.getInstrucciones() == null && receta.getIngredientes() == null) {
+            receta.setInstrucciones(new ArrayList<>());
+            receta.setIngredientes(new ArrayList<>());
+        }
+
         for (Ingrediente ingrediente : recetaRequest.getIngredientes()) {
             agregarIngrediente(receta, ingrediente);
         }
@@ -54,32 +59,23 @@ public class RecetaService {
             agregarInstruccion(receta, instruccion);
         }
 
+        recetaRepository.save(receta);
     }
 
     @Transactional
     public void agregarIngrediente(Receta receta, Ingrediente ingrediente) {
-        if (receta.getIngredientes() == null) {
-            receta.setIngredientes(new ArrayList<>());
-        }
-
         ingrediente.setReceta(receta);
         receta.getIngredientes().add(ingrediente);
 
         ingredienteRepository.save(ingrediente);
-        recetaRepository.save(receta);
     }
 
     @Transactional
     public void agregarInstruccion(Receta receta, Instruccion instruccion) {
-        if (receta.getInstrucciones() == null) {
-            receta.setInstrucciones(new ArrayList<>());
-        }
-
         instruccion.setReceta(receta);
         receta.getInstrucciones().add(instruccion);
 
         instruccionRepository.save(instruccion);
-        recetaRepository.save(receta);
     }
 
     @Transactional
