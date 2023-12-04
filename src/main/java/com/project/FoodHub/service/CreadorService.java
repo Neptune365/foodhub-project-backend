@@ -3,22 +3,20 @@ package com.project.FoodHub.service;
 import com.project.FoodHub.config.Jwt.JwtService;
 import com.project.FoodHub.dto.AuthRequest;
 import com.project.FoodHub.dto.AuthResponse;
+import com.project.FoodHub.dto.CreadorDTO;
 import com.project.FoodHub.entity.Creador;
-import com.project.FoodHub.entity.Receta;
 import com.project.FoodHub.entity.Rol;
 import com.project.FoodHub.exception.*;
+import com.project.FoodHub.mapper.CreadorMapper;
 import com.project.FoodHub.registration.token.TokenConfirmacion;
 import com.project.FoodHub.registration.token.TokenConfirmacionService;
 import com.project.FoodHub.repository.CreadorRepository;
 import com.project.FoodHub.repository.RecetaRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +37,7 @@ public class CreadorService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final RecetaRepository recetaRepository;
+    private final CreadorMapper creadorMapper;
 
 
     public List<Creador> mostrarCreadores() {
@@ -117,6 +116,15 @@ public class CreadorService {
                 .orElseThrow(() -> new CreadorNoEncontradoException("Creador no encontrado con ID: " + idCreador));
 
         return recetaRepository.countByCreador(creador);
+    }
+
+    public CreadorDTO obtenerDatosDeCreador() {
+        Long idCreador = obtenerIdCreadorAutenticado();
+
+        Creador creador = creadorRepository.findByIdCreador(idCreador)
+                .orElseThrow(() -> new CreadorNoEncontradoException("Creador no encontrado con ID: " + idCreador));
+
+        return creadorMapper.mapToDTO(creador);
     }
 
     public int enableUser(String email) {

@@ -1,5 +1,6 @@
 package com.project.FoodHub.controller;
 
+import com.project.FoodHub.dto.CreadorDTO;
 import com.project.FoodHub.dto.ModificarPerfilRequest;
 import com.project.FoodHub.entity.Creador;
 import com.project.FoodHub.service.CreadorService;
@@ -28,6 +29,11 @@ public class CreadorController {
         Integer cantidadRecetas = creadorService.obtenerCantidadDeRecetasCreadas();
 
         return ResponseEntity.ok(cantidadRecetas);
+    }
+
+    @GetMapping("/datos")
+    public CreadorDTO obtenerDatosDeCreador() {
+        return creadorService.obtenerDatosDeCreador();
     }
 
     @PatchMapping("/perfil")
