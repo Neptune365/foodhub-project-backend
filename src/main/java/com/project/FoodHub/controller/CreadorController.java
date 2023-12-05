@@ -14,7 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/creador")
 @RequiredArgsConstructor
-@CrossOrigin("http://localhost:4200")
+@CrossOrigin("https://656f29221ea04709fe8b0b7d--illustrious-piroshki-93e73e.netlify.app")
 public class CreadorController {
 
     private final CreadorService creadorService;

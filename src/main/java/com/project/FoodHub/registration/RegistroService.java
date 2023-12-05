@@ -51,7 +51,7 @@ public class RegistroService {
         Optional<String> tokenOptional = creadorService.crearCuenta(creador);
         String token = tokenOptional.orElseThrow(() -> new CuentaNoCreadaException("No se pudo crear la cuenta correctamente."));
 
-        String link = "http://localhost:8083/auth/confirm?token=" + token;
+        String link = "https://foodhub-backend-4thr.onrender.com/auth/confirm?token=" + token;
         emailSender.enviarConfirmacionCuenta(request.getCorreoElectronico(), request.getNombre(), link);
 
         return new ConfirmacionResponse("Creación de cuenta exitosa", "success");
