@@ -16,7 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/explorar")
 @RequiredArgsConstructor
-@CrossOrigin("https://656fb347bfa59254d6429c7d--comfy-buttercream-08a5c6.netlify.app")
+@CrossOrigin("https://comfy-buttercream-08a5c6.netlify.app")
 public class RecetaController {
 
     private final RecetaService recetaService;
