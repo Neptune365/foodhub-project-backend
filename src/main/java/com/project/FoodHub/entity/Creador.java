@@ -50,7 +50,7 @@ public class Creador implements UserDetails {
     @Column(name = "enabled")
     private Boolean enabled = false;
 
-    @Column(name = "foto_perfil", columnDefinition = "TEXT")
+    @Column(name = "foto_perfil", columnDefinition = "LONGTEXT")
     private String fotoPerfil;
 
     public Creador(String nombre,

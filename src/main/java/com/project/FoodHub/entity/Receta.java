@@ -37,7 +37,7 @@ public class Receta {
     @Column(name = "calorias", nullable = false)
     private Double calorias;
 
-    @Column(name = "imagen", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "imagen", nullable = false, columnDefinition = "LONGTEXT")
     private String imagen;
 
     @ManyToOne
