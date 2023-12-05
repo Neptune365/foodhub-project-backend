@@ -1,5 +1,6 @@
 package com.project.FoodHub.controller;
 
+import com.project.FoodHub.dto.ConfirmacionResponse;
 import com.project.FoodHub.dto.RecetasCategoriaResponse;
 import com.project.FoodHub.dto.RecetaRequest;
 import com.project.FoodHub.entity.Categoria;
@@ -22,9 +23,8 @@ public class RecetaController {
     private final RecetaService recetaService;
 
     @PostMapping("/crear")
-    public ResponseEntity<String> crearReceta(@Valid @RequestBody RecetaRequest recetaRequest) {
-        recetaService.crearReceta(recetaRequest);
-        return new ResponseEntity<>("Receta creada exitosamente", HttpStatus.CREATED);
+    public ResponseEntity<ConfirmacionResponse> crearReceta(@Valid @RequestBody RecetaRequest recetaRequest) {
+        return ResponseEntity.ok(recetaService.crearReceta(recetaRequest));
     }
 
     @GetMapping("/recetas")

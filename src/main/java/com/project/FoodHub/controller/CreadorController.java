@@ -1,5 +1,6 @@
 package com.project.FoodHub.controller;
 
+import com.project.FoodHub.dto.ConfirmacionResponse;
 import com.project.FoodHub.dto.CreadorDTO;
 import com.project.FoodHub.dto.ModificarPerfilRequest;
 import com.project.FoodHub.entity.Creador;
@@ -37,9 +38,8 @@ public class CreadorController {
     }
 
     @PatchMapping("/perfil")
-    public ResponseEntity<String> modificarPerfil(@Valid @RequestBody ModificarPerfilRequest request) {
+    public ResponseEntity<ConfirmacionResponse> modificarPerfil(@Valid @RequestBody ModificarPerfilRequest request) {
         String nuevaFotoPerfil = request.getFotoPerfil();
-        creadorService.modificarPerfil(nuevaFotoPerfil);
-        return ResponseEntity.ok("Perfil modificado con éxito");
+        return ResponseEntity.ok(creadorService.modificarPerfil(nuevaFotoPerfil));
     }
 }

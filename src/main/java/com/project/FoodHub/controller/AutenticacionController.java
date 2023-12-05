@@ -21,7 +21,7 @@ public class AutenticacionController {
     private final CreadorService creadorService;
 
     @PostMapping("/registrar")
-    public ResponseEntity<?> register(@Valid @RequestBody CreadorRequest request/*, HttpServletRequest httpServletRequest*/){
+    public ResponseEntity<ConfirmacionResponse> register(@Valid @RequestBody CreadorRequest request/*, HttpServletRequest httpServletRequest*/){
         /*httpServletRequest.getHeader(HttpHeaders.ORIGIN);*/
         return ResponseEntity.ok(registroService.registrar(request));
     }

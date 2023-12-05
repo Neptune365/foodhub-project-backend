@@ -3,6 +3,7 @@ package com.project.FoodHub.service;
 import com.project.FoodHub.config.Jwt.JwtService;
 import com.project.FoodHub.dto.AuthRequest;
 import com.project.FoodHub.dto.AuthResponse;
+import com.project.FoodHub.dto.ConfirmacionResponse;
 import com.project.FoodHub.dto.CreadorDTO;
 import com.project.FoodHub.entity.Creador;
 import com.project.FoodHub.entity.Rol;
@@ -100,13 +101,15 @@ public class CreadorService {
     }
 
     @Transactional
-    public void modificarPerfil(String fotoPerfil){
+    public ConfirmacionResponse modificarPerfil(String fotoPerfil){
         Long idCreador = obtenerIdCreadorAutenticado();
 
         Creador creador = creadorRepository.findByIdCreador(idCreador)
                 .orElseThrow(() -> new CreadorNoEncontradoException("Creador no encontrado con ID: " + idCreador));
 
         creador.setFotoPerfil(fotoPerfil);
+
+        return new ConfirmacionResponse("Foto de perfil actualizada", "success");
     }
 
     public Integer obtenerCantidadDeRecetasCreadas(){

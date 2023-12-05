@@ -1,5 +1,6 @@
 package com.project.FoodHub.service;
 
+import com.project.FoodHub.dto.ConfirmacionResponse;
 import com.project.FoodHub.dto.RecetasCategoriaResponse;
 import com.project.FoodHub.dto.RecetaRequest;
 import com.project.FoodHub.entity.*;
@@ -29,7 +30,7 @@ public class RecetaService {
 
 
     @Transactional
-    public void crearReceta(RecetaRequest recetaRequest) {
+    public ConfirmacionResponse crearReceta(RecetaRequest recetaRequest) {
         Long idCreador = obtenerIdCreadorAutenticado();
 
         Creador creador = creadorRepository.findById(idCreador)
@@ -57,6 +58,8 @@ public class RecetaService {
         for (Instruccion instruccion : recetaRequest.getInstrucciones()) {
             agregarInstruccion(receta, instruccion);
         }
+
+        return new ConfirmacionResponse("Receta creada de forma exitosa", "success");
     }
 
     @Transactional

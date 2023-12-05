@@ -30,7 +30,7 @@ public class RegistroService {
     private final TokenConfirmacionService tokenConfirmacionService;
 
 
-    public String registrar(CreadorRequest request) {
+    public ConfirmacionResponse registrar(CreadorRequest request) {
         if (!colegiadoService.validarColegiado(request.getNombre(), request.getApellidoPaterno(), request.getApellidoMaterno(), request.getCodigoColegiatura())) {
             throw new ColegiadoNoValidoException("No se pudo validar el colegiado. Verifica los datos proporcionados.");
         }
@@ -54,7 +54,7 @@ public class RegistroService {
         String link = "http://localhost:8083/auth/confirm?token=" + token;
         emailSender.enviarConfirmacionCuenta(request.getCorreoElectronico(), request.getNombre(), link);
 
-        return "created";
+        return new ConfirmacionResponse("Creación de cuenta exitosa", "success");
     }
 
     @Transactional
