@@ -27,7 +27,7 @@ public class WebConfig implements Filter {
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         HttpServletRequest request = (HttpServletRequest) servletRequest;
 
-        response.setHeader("Access-Control-Allow-Origin", "https://656f4e404ec6a10842152769--inquisitive-pegasus-56ce2b.netlify.app");
+        response.setHeader("Access-Control-Allow-Origin", "https://inquisitive-pegasus-56ce2b.netlify.app");
         response.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS, DELETE, HEAD, PATCH");
         response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With, credential, X-XSRF-TOKEN");
 
