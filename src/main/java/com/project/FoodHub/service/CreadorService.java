@@ -100,18 +100,6 @@ public class CreadorService {
         }
     }
 
-    @Transactional
-    public ConfirmacionResponse modificarPerfil(String fotoPerfil){
-        Long idCreador = obtenerIdCreadorAutenticado();
-
-        Creador creador = creadorRepository.findByIdCreador(idCreador)
-                .orElseThrow(() -> new CreadorNoEncontradoException("Creador no encontrado con ID: " + idCreador));
-
-        creador.setFotoPerfil(fotoPerfil);
-
-        return new ConfirmacionResponse("Foto de perfil actualizada", "success");
-    }
-
     public Integer obtenerCantidadDeRecetasCreadas(){
         Long idCreador = obtenerIdCreadorAutenticado();
 
@@ -121,7 +109,7 @@ public class CreadorService {
         return recetaRepository.countByCreador(creador);
     }
 
-    public CreadorDTO obtenerDatosDeCreador() {
+    public CreadorDTO verPerfil() {
         Long idCreador = obtenerIdCreadorAutenticado();
 
         Creador creador = creadorRepository.findByIdCreador(idCreador)

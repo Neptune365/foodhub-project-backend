@@ -8,7 +8,6 @@ import com.project.FoodHub.entity.Receta;
 import com.project.FoodHub.service.RecetaService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,7 +34,7 @@ public class RecetaController {
     }
 
     @GetMapping("/{idReceta}")
-    public ResponseEntity<Receta> verReceta(@PathVariable Long idReceta) {
+    public ResponseEntity<Receta> verReceta(@PathVariable("idReceta") Long idReceta) {
         Receta receta = recetaService.verReceta(idReceta);
         return ResponseEntity.ok(receta);
     }

@@ -88,6 +88,7 @@ public class RecetaService {
 
         for (Receta receta : recetas) {
             RecetasCategoriaResponse recetasCategoriaResponse = RecetasCategoriaResponse.builder()
+                    .id(receta.getId())
                     .titulo(receta.getTitulo())
                     .descripcion(receta.getDescripcion())
                     .imagenReceta(receta.getImagen())

@@ -30,7 +30,7 @@ public class Creador implements UserDetails {
     private String apellidoPaterno;
 
     @Column(name = "apellido_materno", nullable = false)
-    private String appellidoMaterno;
+    private String apellidoMaterno;
 
     @Column(name = "correo_electronico", nullable = false)
     private String correoElectronico;
@@ -61,7 +61,7 @@ public class Creador implements UserDetails {
                    String codigoColegiatura) {
         this.nombre = nombre;
         this.apellidoPaterno = apellidoPaterno;
-        this.appellidoMaterno = apellidoMaterno;
+        this.apellidoMaterno = apellidoMaterno;
         this.correoElectronico = email;
         this.contrasenia = contrasenia;
         this.codigoColegiatura = codigoColegiatura;
