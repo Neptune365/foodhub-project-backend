@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/auth")
 @AllArgsConstructor
-@CrossOrigin("https://656f29221ea04709fe8b0b7d--illustrious-piroshki-93e73e.netlify.app")
+@CrossOrigin("https://656f4e404ec6a10842152769--inquisitive-pegasus-56ce2b.netlify.app")
 public class AutenticacionController {
 
     private final RegistroService registroService;
