@@ -1,11 +1,13 @@
 package com.project.FoodHub.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.mapping.List;
+
+import java.util.List;
 
 @Builder
 @Data
@@ -17,6 +19,7 @@ public class Receta {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_receta")
     private Long id;
 
     @Column(name = "titulo", nullable = false)
@@ -24,12 +27,6 @@ public class Receta {
 
     @Column(name = "descripcion", nullable = false)
     private String descripcion;
-
-    @Column(name = "ingredientes", nullable = false)
-    private List ingredientes;
-
-    @Column(name = "instrucciones", nullable = false)
-    private List instrucciones;
 
     @Column(name = "tiempo_coccion", nullable = false)
     private Integer tiempoCoccion;
@@ -40,10 +37,22 @@ public class Receta {
     @Column(name = "calorias", nullable = false)
     private Double calorias;
 
-    @Column(name = "imagen", nullable = false)
+    @Column(name = "imagen", nullable = false, columnDefinition = "LONGTEXT")
     private String imagen;
 
+    @ManyToOne
+    @JoinColumn(name = "id_creador")
+    @JsonIgnore
+    private Creador creador;
+
+    @OneToMany(mappedBy = "receta", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Ingrediente> ingredientes;
+
+    @OneToMany(mappedBy = "receta", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Instruccion> instrucciones;
+
+    @Enumerated(EnumType.STRING)
     @Column(name = "categoria", nullable = false)
-    private String categoria;
+    private Categoria categoria;
 
 }
